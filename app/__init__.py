@@ -1,17 +1,22 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_login import LoginManager
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 def create_app():
   app = Flask(__name__)
 
   app.config['SECRET_KEY'] = 'ASpire2begreat'
-  app.config['SQLALCHEMY_DATABASE_URI'] = ""
+  app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xczqgmpzkonwkf:1abc0c71a01357e5c8d9aa421e3d1a119f34d2385bb13553873a4bbd538afc1b@ec2-54-86-170-8.compute-1.amazonaws.com:5432/d35kj3mpcd9svj"
+  app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
   db.init_app(app)
+  from app.models import User, Project
+  migrate.init_app(app, db)
 
   login_manager = LoginManager()
   login_manager.login_view = 'auth.login'
