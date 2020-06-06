@@ -22,6 +22,7 @@ class RegisterForm(FlaskForm):
   password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=80)])
   role = SelectField('role', choices=[(
       'Admin', 'Admin'), ('Project manager', 'Project manager'), ('Developer', 'Developer')], validators=[InputRequired()])
+  submit = SubmitField('Register')
 
 
 #login
@@ -60,4 +61,4 @@ def signup():
 @login_required
 def logout():
   logout_user()
-  return(redirect(url_for('index')))
+  return(redirect(url_for('main.index')))
