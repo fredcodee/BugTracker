@@ -7,12 +7,30 @@
 </head>
 <body>
   <h1>users in the database</h1>
-  <div>
-    <ul>
+    {% with messages = get_flashed_messages() %}
+    {% if messages%}
+    <div class="alert alert-danger" role="alert">
+      {{ messages[0] }}
+    </div>
+    {% endif%}
+    {% endwith %}
+
+
+    <div>
       {% for user in users %}
-        <li>{{user.name}} {{user.email}} {{user.role}}</li>
+          <div class="form-popup" id="myForm">
+            <form action="/assign/{{user.id}}" class="form-container" method="POST">
+              <p>{{user.name}} - {{user.email}} - {{user.role}}</p>
+              <select name="selection">
+                <option value="SL">Select Role</option>
+                <option value="Admin">Admin</option>
+                <option value="Project manager">Project manager</option>
+                <option value="Developer">Developer</option>
+              </select>
+              <button class="btn btn-dark">Change</button>
+            </form>
+          </div>
       {% endfor %}
-    </ul>
-  </div>
+    </div>
 </body>
 </html>

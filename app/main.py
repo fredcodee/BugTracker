@@ -32,9 +32,24 @@ def profile(user):
 def mra():
   if current_user.role == "Admin":
     users=User.query.all()
-    if request.method == 'POST':
-      pass
-  
     return(render_template("mra.html", users=users))
   else:
     abort(404)
+
+#assign role assignment
+@main.route("/assign/<idd>", methods=["POST"])
+@login_required
+def assign(idd):
+  get_user = User.query.get(int(idd))
+  role = request.form.get("selection")
+
+  if get_user and role != "SL":
+    get_user.role = role
+    db.session.commit()
+    return(redirect(url_for("main.mra")))
+    flash("New role assigned")
+  else:
+    flash("invalid / no role was assigned")
+    return(redirect(url_for("main.mra")))
+
+  

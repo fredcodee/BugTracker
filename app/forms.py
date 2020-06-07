@@ -24,7 +24,6 @@ class RegisterForm(FlaskForm):
       'Admin', 'Admin'), ('Project manager', 'Project manager'), ('Developer', 'Developer')], validators=[InputRequired()])
   submit = SubmitField('Register')
 
-
 #login
 @forms.route("/login", methods=['GET', 'POST'])
 def login():
