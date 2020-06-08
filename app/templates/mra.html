@@ -14,12 +14,24 @@
     </div>
     {% endif%}
     {% endwith %}
-    <!-- search faeture-->
+    <!-- pagination and search feature-->
     <div>
-      <form action="/managerole/search" method="POST">
-        <input type="text" name="search" placeholder="name, email or role">
-      </form>
+      <div>
+        <form action="/managerole/show" method="POST">
+          <label for="pagenum">show</label>
+          <input type="number" min="1" max="{{pn}}" name="pagenum" id="pagenum" placeholder="{{pn}}">
+          <input type="submit">
+        </form>
+      </div>
+      <br>
+      <div>
+        <form action="/managerole/search" method="POST">
+          <input type="text" name="search" placeholder="name, email or role">
+        </form>
+      </div>
+
     </div>
+    
 
     <div>
       <hr>

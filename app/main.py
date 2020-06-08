@@ -31,12 +31,26 @@ def profile(user):
 @login_required
 def mra():
   if current_user.role == "Admin":
-    users=User.query.all()
-    return(render_template("mra.html", users=users))
+    items_num = 10
+    users = User.query.paginate(1, items_num, False).items
+    pn=len(users)
+    return(render_template("mra.html", users=users, pn = pn))
   else:
     abort(404)
 
-#search for user in manage role assignment
+#pagination for manage roles
+@main.route("/managerole/show", methods=["GET", "POST"])
+@login_required
+def pagenum():
+  num= request.form.get("pagenum")
+  if num:
+    items_num = int(num)
+    users = User.query.paginate(1, items_num, False).items
+    return(render_template("mra.html", users=users))
+  else:
+    return(redirect(url_for("main.mra")))
+
+#search for users in manage role assignment
 @main.route("/managerole/search", methods=["GET", "POST"])
 @login_required
 def searchuser():
