@@ -14,9 +14,15 @@
     </div>
     {% endif%}
     {% endwith %}
-
+    <!-- search faeture-->
+    <div>
+      <form action="/managerole/search" method="POST">
+        <input type="text" name="search" placeholder="name, email or role">
+      </form>
+    </div>
 
     <div>
+      <hr>
       {% for user in users %}
           <div class="form-popup" id="myForm">
             <form action="/assign/{{user.id}}" class="form-container" method="POST">
@@ -30,6 +36,7 @@
               <button class="btn btn-dark">Change</button>
             </form>
           </div>
+          <hr>
       {% endfor %}
     </div>
 </body>

@@ -26,7 +26,7 @@ def profile(user):
     get_user = User.query.filter_by(name=user).first()
     return(render_template("profile.html", get_user=get_user))
 
-#manage role assignment
+#show all users for manage role assignment
 @main.route("/managerole", methods=["GET","POST"])
 @login_required
 def mra():
@@ -36,7 +36,24 @@ def mra():
   else:
     abort(404)
 
-#assign role assignment
+#search for user in manage role assignment
+@main.route("/managerole/search", methods=["GET", "POST"])
+@login_required
+def searchuser():
+  search = request.form.get("search")
+  if search:
+    from sqlalchemy import or_
+    get_user= User.query.filter(or_(User.name == search, User.email == search, User.role == search)).all()
+    if get_user:
+      return(render_template("mra.html", users=get_user))
+    else:
+      flash("user not found")
+      return(redirect(url_for("main.mra")))
+  else:
+    flash("please recheck and type the correct details needed")
+    return(redirect(url_for("main.mra")))
+
+#assign role
 @main.route("/assign/<idd>", methods=["POST"])
 @login_required
 def assign(idd):
