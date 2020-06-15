@@ -113,8 +113,6 @@ def projects():
   return(render_template("projects.html", projects = projects))
 
 #edit project
-
-
 @main.route("/editproject/<idd>", methods=['POST', 'GET'])
 @login_required
 def edit_project(idd):
@@ -126,7 +124,7 @@ def edit_project(idd):
       project_description = request.form.get('description')
 
       project.project_name =project_name
-      decription  = project_description
+      project.description  = project_description
       db.session.commit()
       flash('changes saved')
       return(redirect(url_for('main.projects')))

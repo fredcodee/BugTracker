@@ -10,6 +10,13 @@
     <a href="{{url_for('main.createproject')}}"><button>CREATE</button></a>
   </div>
   <h1>My Projects</h1>
+  {% with messages = get_flashed_messages() %}
+  {% if messages%}
+  <div class="alert alert-danger" role="alert">
+    {{ messages[0] }}
+  </div>
+  {% endif%}
+  {% endwith %}
   {% for project in projects%}
     <div>
       <h3>{{project.project_name}}</h3>
