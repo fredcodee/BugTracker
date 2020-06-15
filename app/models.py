@@ -29,3 +29,7 @@ class Ticket(db.Model):
   ticket_description = db.Column(db.String(120), nullable=False)
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
   project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+  #status
+  #time
+  #comment
+  #picture or files

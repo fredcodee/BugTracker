@@ -23,7 +23,7 @@
       {%if current_user.role == 'Admin' or current_user.role == 'Project manager' %}
         <a href=""><li>Manage project users</li></a>
       {% endif %}
-      <a href=""><li>My projects</li></a>
+      <a href="/projects"><li>My projects</li></a>
       <a href=""><li>My tickets</li></a>
       <a href="/{{current_user.name}}"><li>user_profile</li></a>
     </ul>

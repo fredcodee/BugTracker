@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for, abort
-from app.models import User
+from app.models import User, Project
 from app import db
 from flask_wtf import FlaskForm
 from flask_login import login_required , current_user
@@ -87,3 +87,27 @@ def assign(idd):
 
 #manage project users
 
+
+#PROJECTS
+#create project
+@main.route("/createproject", methods=["GET", "POST"])
+@login_required
+def createproject():
+  if request.method == 'POST':
+    project_name= request.form.get('name')
+    project_description = request.form.get('description')
+
+    project = Project(project_name=project_name, description= project_description)
+    db.session.add(project)
+    db.session.commit()
+    flash('project created')
+    return(redirect(url_for('main.createproject')))
+
+  return(render_template('createproject.html'))
+
+#view project
+@main.route("/projects")
+@login_required
+def projects():
+  projects = Project.query.all()
+  return(render_template("projects.html", projects = projects))
