@@ -85,7 +85,7 @@ def assign(idd):
     return(redirect(url_for("main.mra")))
 
 
-#manage project users
+#MANAGE PROJECT USERS
 
 
 #PROJECTS
@@ -111,3 +111,27 @@ def createproject():
 def projects():
   projects = Project.query.all()
   return(render_template("projects.html", projects = projects))
+
+#edit project
+
+
+@main.route("/editproject/<idd>", methods=['POST', 'GET'])
+@login_required
+def edit_project(idd):
+  if current_user.role == "Admin":
+    project = Project.query.get(int(idd))
+
+    if request.method == 'POST':
+      project_name = request.form.get('name')
+      project_description = request.form.get('description')
+
+      project.project_name =project_name
+      decription  = project_description
+      db.session.commit()
+      flash('changes saved')
+      return(redirect(url_for('main.projects')))
+
+    return(render_template('editproject.html', project_id =project.id))
+  else:
+    abort(404)
+
