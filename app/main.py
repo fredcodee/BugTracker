@@ -19,6 +19,7 @@ def index():
 def home():
   return(render_template("home.html"))
 
+#user profile
 @main.route("/<user>")
 @login_required
 def profile(user):
@@ -83,4 +84,6 @@ def assign(idd):
     flash("invalid / no role was assigned")
     return(redirect(url_for("main.mra")))
 
-  
+
+#manage project users
+
