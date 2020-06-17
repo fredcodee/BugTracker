@@ -141,12 +141,26 @@ def adduser(idd):
   flash("changes saved")
   return(redirect(url_for("main.AddToProject", idd = idd)))
 
-    
-
-
 #remove users
+@main.route("/remove/<idd>" , methods= ["POST", "GET"])
+@login_required
+def remove(idd):
+  if current_user.role == 'Admin':
+    if request.method == 'POST':
+      users = request.form.getlist('user')
+      get_project = Project.query.get(int(idd))
+      for user in users:
+        get_user = User.query.get(int(user))
+        get_project.team.remove(get_user)
+        db.session.commit()
+        flash("changes saved")
+        return(redirect(url_for("main.remove", idd = idd)))
 
-
+    project = Project.query.get(int(idd))
+    assigned_users = project.team
+    return(render_template("remove.html", project=project, assigned=assigned_users))
+  else:
+    abort(404)
 
 #PROJECTS
 #create project

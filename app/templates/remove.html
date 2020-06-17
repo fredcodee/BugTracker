@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>remove users</title>
+</head>
+
+<body>
+  <h1>REMOVE USERS FROM THIS PROJECT</h1>
+  {% with messages = get_flashed_messages() %}
+  {% if messages%}
+  <div class="alert alert-danger" role="alert">
+    {{ messages[0] }}
+  </div>
+  {% endif%}
+  {% endwith %}
+  <div>
+    <h1>name: {{project.project_name}}</h1>
+    <p>description: {{project.description}}</p>
+  </div>
+  <div>
+    <h3>Assigned Users in this project</h3>
+    {% for assigned_user in assigned%}
+    <form action="/remove/{{project.id}}" method="POST">
+      {{assigned_user.name}} {{assigned_user.role}}<input type="checkbox" value="{{assigned_user.id}}" name="user"> <br>
+      <input type="submit">
+    </form>
+    {% endfor%}
+  </div>
+  </div>
+</body>
+
+</html>
