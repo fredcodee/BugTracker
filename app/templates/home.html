@@ -21,7 +21,7 @@
         <a href="{{url_for('main.mra')}}"><li>Manage role assignment</li></a>
       {% endif %}
       {%if current_user.role == 'Admin' or current_user.role == 'Project manager' %}
-        <a href=""><li>Manage project users</li></a>
+        <a href="/manageprojects"><li>Manage project users</li></a>
       {% endif %}
       <a href="/projects"><li>My projects</li></a>
       <a href=""><li>My tickets</li></a>

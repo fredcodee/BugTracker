@@ -6,6 +6,20 @@
   <title>manage project users</title>
 </head>
 <body>
-  
+  <h1>MANAGE PROJECT USERS</h1>
+  {% with messages = get_flashed_messages() %}
+  {% if messages%}
+  <div class="alert alert-danger" role="alert">
+    {{ messages[0] }}
+  </div>
+  {% endif%}
+  {% endwith %}
+  {% for project in projects%}
+  <div>
+    <h3>{{project.project_name}}</h3>
+    <a href="/AddToProject/{{project.id}}">assign users</a>
+    <a href="">remove users</a>
+  </div>
+  {%endfor%}
 </body>
 </html>

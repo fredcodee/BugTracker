@@ -86,6 +86,66 @@ def assign(idd):
 
 
 #MANAGE PROJECT USERS
+#view porjects
+@main.route("/manageprojects")
+@login_required
+def manageprojects():
+  projects = Project.query.all()
+  return(render_template("mpr.html", projects=projects))
+
+#view selected project
+@main.route("/AddToProject/<idd>")
+@login_required
+def AddToProject(idd):
+  if current_user.role == "Admin":
+    project = Project.query.get(int(idd))
+    assigned_users = project.team
+    return(render_template("assign.html", project = project, assigned = assigned_users))
+  else:
+    abort(404)
+
+#search user
+@main.route("/AddToProject/<idd>/search", methods=["GET", "POST"])
+@login_required
+def searchuser2(idd):
+  project = Project.query.get(int(idd))
+  search = request.form.get("search")
+  if search:
+    from sqlalchemy import or_
+    get_user = User.query.filter(
+        or_(User.name == search, User.email == search, User.role == search)).all()
+    if get_user:
+      return(render_template("assign2.html", users=get_user, project = project))
+    else:
+      flash("user not found")
+      return(redirect(url_for("main.AddToProject")))
+  else:
+    flash("please recheck and type the correct details needed")
+    return(redirect(url_for("main.AddToProject")))
+
+#add user to a project
+@main.route("/adduser/<idd>", methods=["POST"])
+@login_required
+def adduser(idd):
+  users = request.form.getlist('user')
+  get_project = Project.query.get(int(idd))
+
+  for user in users:
+    if user in get_project.team:
+      users.remove(user)
+    else:
+      get_user = User.query.get(int(user))
+      get_project.team.append(get_user)
+      db.session.commit()
+
+  flash("changes saved")
+  return(redirect(url_for("main.AddToProject", idd = idd)))
+
+    
+
+
+#remove users
+
 
 
 #PROJECTS
