@@ -55,7 +55,7 @@ def pagenum():
 @main.route("/managerole/search", methods=["GET", "POST"])
 @login_required
 def searchuser():
-  search = request.form.get("search")
+  search = request.form.get("search").title()
   if search:
     from sqlalchemy import or_
     get_user= User.query.filter(or_(User.name == search, User.email == search, User.role == search)).all()
@@ -109,7 +109,7 @@ def AddToProject(idd):
 @login_required
 def searchuser2(idd):
   project = Project.query.get(int(idd))
-  search = request.form.get("search")
+  search = request.form.get("search").title()
   if search:
     from sqlalchemy import or_
     get_user = User.query.filter(
@@ -118,10 +118,10 @@ def searchuser2(idd):
       return(render_template("assign2.html", users=get_user, project = project))
     else:
       flash("user not found")
-      return(redirect(url_for("main.AddToProject")))
+      return(redirect(url_for("main.AddToProject", idd=idd)))
   else:
     flash("please recheck and type the correct details needed")
-    return(redirect(url_for("main.AddToProject")))
+    return(redirect(url_for("main.AddToProject", idd = idd)))
 
 #add user to a project
 @main.route("/adduser/<idd>", methods=["POST"])
