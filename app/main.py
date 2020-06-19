@@ -58,7 +58,7 @@ def searchuser():
   search = request.form.get("search").title()
   if search:
     from sqlalchemy import or_
-    get_user= User.query.filter(or_(User.name == search, User.email == search, User.role == search)).all()
+    get_user= User.query.filter(or_(User.name == search,User.role == search)).all()
     if get_user:
       return(render_template("mra.html", users=get_user))
     else:
@@ -113,7 +113,7 @@ def searchuser2(idd):
   if search:
     from sqlalchemy import or_
     get_user = User.query.filter(
-        or_(User.name == search, User.email == search, User.role == search)).all()
+        or_(User.name == search, User.role == search)).all()
     if get_user:
       return(render_template("assign2.html", users=get_user, project = project))
     else:
@@ -207,3 +207,4 @@ def edit_project(idd):
   else:
     abort(404)
 
+#TICKETS
