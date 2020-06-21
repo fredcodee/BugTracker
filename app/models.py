@@ -13,6 +13,7 @@ class User(UserMixin, db.Model):
   role = db.Column(db.String(100), nullable=False)
   projects = db.relationship("Project", secondary=assign, backref='team')
   tickets = db.relationship('Ticket', backref='user_ticket', lazy='dynamic')
+  ticket_comment =db.relationship('Comment', backref='user_comment', lazy='dynamic')
 
 class Project(db.Model):
   __tablename__ = 'project'
@@ -25,11 +26,25 @@ class Project(db.Model):
 class Ticket(db.Model):
   __tablename__ = 'ticket'
   id = db.Column(db.Integer, primary_key=True)
-  ticket_name = db.Column(db.String(120), nullable=False)
-  ticket_description = db.Column(db.String(120), nullable=False)
+  title = db.Column(db.String(120), nullable=False)
+  description = db.Column(db.String(120), nullable=False)
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
   project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-  #status
-  #time
-  #comment
-  #picture or files
+  status = db.Column(db.String(50), nullable=False)
+  priority = db.Column(db.String(70), nullable=False)
+  ticket_type = db.Column(db.String(50), nullable=False)
+  ref_num = db.Column(db.Integer, nullable=False)
+  date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+  comments = db.relationship('Comment', backref='ticket_comments', lazy='dynamic')
+  files = db.Column(db.String(500))
+
+class Comment(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  details = db.Column(db.String(400))
+  user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+  ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
+
+class Ticket_history(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  details = db.Column(db.String(500))
+  ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))

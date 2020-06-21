@@ -15,7 +15,7 @@ def create_app():
   app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
   db.init_app(app)
-  from app.models import User, Project
+  from app.models import User, Project, Ticket, Comment,Ticket_history
   migrate.init_app(app, db)
 
   login_manager = LoginManager()
