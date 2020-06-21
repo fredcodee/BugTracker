@@ -210,4 +210,12 @@ def edit_project(idd):
   else:
     abort(404)
 
+#project details
+@main.route("/details/<idd>")
+@login_required
+def project_details(idd):
+  project = Project.query.get(int(idd))
+  return(render_template("projectdetails.html", project = project))
+
+
 #TICKETS
