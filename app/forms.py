@@ -46,7 +46,6 @@ def signup():
     form = RegisterForm()
 
     if form.validate_on_submit():
-
       hashed_password = generate_password_hash(form.password.data, method='sha256')
       u_name = form.name.data
       new_user = User(name=u_name.title(),email=form.email.data, role=form.role.data, password=hashed_password)

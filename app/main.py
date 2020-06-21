@@ -55,10 +55,12 @@ def pagenum():
 @main.route("/managerole/search", methods=["GET", "POST"])
 @login_required
 def searchuser():
-  search = request.form.get("search").title()
+  init_search = request.form.get("search")
+  search = init_search.title()
   if search:
     from sqlalchemy import or_
-    get_user= User.query.filter(or_(User.name == search,User.role == search)).all()
+    get_user = User.query.filter(
+        or_(User.name == search, User.email == init_search, User.role == search)).all()
     if get_user:
       return(render_template("mra.html", users=get_user))
     else:
@@ -109,11 +111,12 @@ def AddToProject(idd):
 @login_required
 def searchuser2(idd):
   project = Project.query.get(int(idd))
-  search = request.form.get("search").title()
+  init_search = request.form.get("search")
+  search = init_search.title()
   if search:
     from sqlalchemy import or_
     get_user = User.query.filter(
-        or_(User.name == search, User.role == search)).all()
+        or_(User.name == search,User.email == init_search,User.role == search)).all()
     if get_user:
       return(render_template("assign2.html", users=get_user, project = project))
     else:
