@@ -36,6 +36,7 @@ class Ticket(db.Model):
   ref_num = db.Column(db.Integer, nullable=False)
   date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
   comments = db.relationship('Comment', backref='ticket_comments', lazy='dynamic')
+  assigned_dev = db.Column(db.String(120), nullable=False)
   files = db.Column(db.String(500))
 
 class Comment(db.Model):

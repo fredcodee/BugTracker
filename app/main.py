@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for, abort
-from app.models import User, Project
+from app.models import User, Project, Ticket, Comment, Ticket_history
 from app import db
 from flask_wtf import FlaskForm
 from flask_login import login_required , current_user
@@ -219,4 +219,26 @@ def project_details(idd):
 
 
 #TICKETS
+#view tickets
+@main.route("/mytickets")
+@login_required
+def mytickets():
+  tickets = Ticket.query.all()
+  #admin sees all tickets
+  if current_user.role == "Admin":
+    return(render_template("tickets.html", tickets=tickets))
+  
+  elif current_user =="Project manager":
+    #project manager restricted to only theirs
+    mytickets=Ticket.query.filter(Ticket.user_ticket.has(email=current_user.email))
+    return(render_template("tickets.html", tickets=mytickets))
+    
+  elif current_user == "Developer":
+    # tickets assigned to developer
+    mytickets = Ticket.query.filter(assigned_dev= current_user.email)
+    return(render_template("tickets.html", tickets=mytickets))
+  else:
+    abort(404)
 
+#create tickets
+#only admin and pm allowed
