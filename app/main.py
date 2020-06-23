@@ -241,4 +241,14 @@ def mytickets():
     abort(404)
 
 #create tickets
-#only admin and pm allowed
+@main.route("/tickets/create", methods = ["POST", "GET"])
+@login_required
+def createticket():
+  #only admin and pm allowed
+  if current_user.role != "Developer":
+    if request.method == "POST":
+      pass
+    return(render_template("createticket.html"))
+  else:
+    abort(404)
+  
