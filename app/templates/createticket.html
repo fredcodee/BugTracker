@@ -6,6 +6,8 @@
   <title>creeat ticket</title>
 </head>
 <body>
+  <p> project name: {{project.project_name}}</p>
+  <p>project description: {{project.description}}</p>
   <h1>CREATE TICKET</h1>
   {% for message in get_flashed_messages() %}
   <div class="alert alert-warning">
@@ -14,7 +16,7 @@
   </div>
   {% endfor %}
   <div>
-    <form action="{{url_for('main.createticket')}}" method="POST">
+    <form action="{{url_for('main.createticket_form', idd = project.id)}}" method="POST">
       <fieldset class="title">
         <label for="title">Ticket Title</label>
         <input type="text" id="title" name="title" required>
@@ -27,41 +29,41 @@
 
       <fieldset class="assigned">
         <label for="assigned"> Assigned Developer</label>
-        <input type="email" id="assigned" name="assigned" required>
+        <input type="email" id="assigned" name="assigned" required placeholder="Email">
       </fieldset>
       
       <fieldset class="priority">
         <label for="priority">Ticket Priority</label>
         <select name="priority" id="priority" required>
-          <option value="NN">None</option>
-          <option value="L">Low</option>
-          <option value="M">Medium</option>
-          <option value="H">High</option>
+          <option value="NONE">None</option>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
         </select>
       </fieldset>
 
       <fieldset class="status">
         <label for="status">Status</label>
         <select name="status" id="status" required>
-          <option value="IP">IN PROGRESS</option>
-          <option value="OP">OPEN</option>
-          <option value="CL">CLOSED</option>
-          <option value="RE">RESOLVED</option>
+          <option value="IN PROGRESS">IN PROGRESS</option>
+          <option value="OPEN">OPEN</option>
+          <option value="CLOSED">CLOSED</option>
+          <option value="RESOLVED">RESOLVED</option>
         </select>
       </fieldset>
 
       <fieldset class="type">
         <label for="type"> Ticket Type</label>
         <select name="type" id="type" required>
-          <option value="BE">BUG ERRORS</option>
-          <option value="FR">FEATURE REQUESTS</option>
-          <option value="AR">ACTION REQUIRED</option>
-          <option value="FD">FILE/DOCUMENT REQUEST</option>
+          <option value="BUG ERRORS">BUG ERRORS</option>
+          <option value="FEATURE REQUESTS">FEATURE REQUESTS</option>
+          <option value="ACTION REQUIRED">ACTION REQUIRED</option>
+          <option value="FILE/DOCUMENT REQUEST">FILE/DOCUMENT REQUEST</option>
         </select>
       </fieldset>
 
       <fieldset class="comments">
-        <label for="comments">comments</label>
+        <label for="comments">comments (optional)</label>
         <input type="text" id="comments" name="comments">
       </fieldset>
 

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose project</title>
+</head>
+<body>
+  <p>create ticket</p>
+  <h1>select a project</h1>
+  {% for project in projects %}
+    <div>
+      <a href="{{url_for('main.createticket_form', idd = project.id)}}">{{project.project_name}}</a>
+    </div>
+    <hr>
+  {% endfor%}
+
+</body>
+</html>

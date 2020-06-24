@@ -80,8 +80,8 @@ def assign(idd):
   if get_user and role != "SL":
     get_user.role = role
     db.session.commit()
-    return(redirect(url_for("main.mra")))
     flash("New role assigned")
+    return(redirect(url_for("main.mra")))
   else:
     flash("invalid / no role was assigned")
     return(redirect(url_for("main.mra")))
@@ -241,14 +241,52 @@ def mytickets():
     abort(404)
 
 #create tickets
-@main.route("/tickets/create", methods = ["POST", "GET"])
+@main.route("/mytickets/projects")
 @login_required
 def createticket():
+  projects = Project.query.all()
+  return(render_template("createticketsub.html", projects = projects))
+
+#ticket form
+@main.route("/tickets/create/<idd>", methods = ["POST", "GET"])
+@login_required
+def createticket_form(idd):
+  project = Project.query.get(int(idd))
+
   #only admin and pm allowed
   if current_user.role != "Developer":
     if request.method == "POST":
-      pass
-    return(render_template("createticket.html"))
+      title=request.form.get("title")
+      description = request.form.get("description")
+      assigned = request.form.get("assigned")
+      priority = request.form.get("priority")
+      status = request.form.get("status")
+      ticket_type = request.form.get("type")
+      comment = request.form.get("comments")
+
+      #create ref num
+      import random
+      ref_n = []
+      for i in range(6):
+        n = random.randint(0, 9)
+        ref_n.append(str(n))
+      ref_num = "".join(ref_n)
+      
+      #check assigned developer
+      check_assigned_dev = User.query.filter_by(email=assigned).first()
+      if check_assigned_dev:
+        #save ticket to database
+        new_ticket = Ticket(title = title, description = description,assigned_dev = assigned,ticket_type = ticket_type, priority = priority,status = status, comments = comment, ref_num = int(ref_num), user_ticket= current_user, project_ticket = project)
+
+        db.session.add(new_ticket)
+        db.session.commit()
+        flash("Ticket Created")
+        return(redirect(url_for("main.mytickets")))
+      else:
+        flash("Assigned developer not found")
+        return(redirect(url_for("main.createticket_form", idd = idd)))
+
+    return(render_template("createticket.html", project= project))
   else:
     abort(404)
   
