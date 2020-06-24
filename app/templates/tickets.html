@@ -18,7 +18,11 @@
   {% endif%}
   {% endwith %}
   <div>
-    
+    {%for ticket in tickets %}
+    <h3>{{ticket.title}}</h3>
+    <p>{{ticket.description}}</p>
+    <hr>
+    {% endfor%}
   </div>
 </body>
 </html>
