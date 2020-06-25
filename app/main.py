@@ -56,8 +56,18 @@ def pagenum():
 @login_required
 def searchuser():
   init_search = request.form.get("search")
-  search = init_search.title()
-  if search:
+
+  if init_search:
+    if len(init_search.split()) == 2:
+      search_input = init_search.split()
+      search_input[0] = search_input[0].title()
+      if search_input[0] == "Project":
+        search = " ".join(search_input)
+      else:
+        search = init_search.title()
+    else:
+      search = init_search.title()
+
     from sqlalchemy import or_
     get_user = User.query.filter(
         or_(User.name == search, User.email == init_search, User.role == search)).all()
@@ -112,8 +122,18 @@ def AddToProject(idd):
 def searchuser2(idd):
   project = Project.query.get(int(idd))
   init_search = request.form.get("search")
-  search = init_search.title()
-  if search:
+
+  if init_search:
+    if len(init_search.split()) == 2:
+      search_input = init_search.split()
+      search_input[0] = search_input[0].title()
+      if search_input[0] == "Project":
+        search = " ".join(search_input)
+      else:
+        search = init_search.title()
+    else:
+      search = init_search.title()
+
     from sqlalchemy import or_
     get_user = User.query.filter(
         or_(User.name == search,User.email == init_search,User.role == search)).all()
@@ -290,3 +310,6 @@ def createticket_form(idd):
   else:
     abort(404)
   
+
+
+#written by Wilfred 

@@ -19,7 +19,8 @@
   {% endwith %}
   {% for project in projects%}
     <div>
-      <h3>{{project.project_name}} decsripion- {{project.description}}</h3>
+      <h3>project name: {{project.project_name}}</h3>
+      <p>decsripion: {{project.description}}</p>
       <a href="{{ url_for('main.edit_project', idd=project.id) }}">edit</a>
       <a href="/details/{{project.id}}">details</a>
     </div>
