@@ -13,6 +13,7 @@ def create_app():
   app.config['SECRET_KEY'] = 'ASpire2begreat'
   app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xczqgmpzkonwkf:1abc0c71a01357e5c8d9aa421e3d1a119f34d2385bb13553873a4bbd538afc1b@ec2-54-86-170-8.compute-1.amazonaws.com:5432/d35kj3mpcd9svj"
   app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+  app.config['WHOOSH_BASE'] = 'whoosh'
 
   db.init_app(app)
   from app.models import User, Project, Ticket, Comment,Ticket_history
