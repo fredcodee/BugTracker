@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a5ee7da3472778de2f414957d0bb189afbc454ccb81e71e06261a6463e33564b"
+            "sha256": "f7f2498abe51b1d6073bcd1c22c20a991e4722bc9817bc1dd8601ef4a625271c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,13 @@
             "index": "pypi",
             "version": "==1.4.2"
         },
+        "blinker": {
+            "hashes": [
+                "sha256:471aee25f3992bd325afa3772f1063dbdbbca947a041b8b89466dc00d606f8b6"
+            ],
+            "index": "pypi",
+            "version": "==1.4"
+        },
         "click": {
             "hashes": [
                 "sha256:8a18b4ea89d8820c5d0c7da8a64b2c324b4dabb695804dbfea19b9be9d88c0cc",
@@ -37,6 +44,14 @@
                 "sha256:f69c21288a962f4da86e56c4905b49d11aba7938d3d740e80d9e366ee4f1632d"
             ],
             "version": "==1.16.0"
+        },
+        "elasticsearch": {
+            "hashes": [
+                "sha256:7546cc08e3899716e12fe67d12d7cfe9a64647014d1134b014c3c392b63cad42",
+                "sha256:aada5cfdc4a543c47098eb3aca6663848ef5d04b4324935ced441debc11ec98b"
+            ],
+            "index": "pypi",
+            "version": "==6.3.1"
         },
         "email-validator": {
             "hashes": [
@@ -69,6 +84,13 @@
             ],
             "index": "pypi",
             "version": "==2.5.3"
+        },
+        "flask-msearch": {
+            "hashes": [
+                "sha256:c98ff2b434bed774190af93f317ade9184e3e436f5181181d650c7f461ae10cb"
+            ],
+            "index": "pypi",
+            "version": "==0.2.9"
         },
         "flask-sqlalchemy": {
             "hashes": [
@@ -222,6 +244,13 @@
             "index": "pypi",
             "version": "==1.3.15"
         },
+        "urllib3": {
+            "hashes": [
+                "sha256:3018294ebefce6572a474f0604c2021e33b3fd8006ecd11d62107a5d2a963527",
+                "sha256:88206b0eb87e6d677d424843ac5209e3fb9d0190d0ee169599165ec25e9d9115"
+            ],
+            "version": "==1.25.9"
+        },
         "werkzeug": {
             "hashes": [
                 "sha256:169ba8a33788476292d04186ab33b01d6add475033dfc07215e6d219cc077096",
@@ -229,6 +258,15 @@
             ],
             "index": "pypi",
             "version": "==1.0.0"
+        },
+        "whoosh": {
+            "hashes": [
+                "sha256:7ca5633dbfa9e0e0fa400d3151a8a0c4bec53bd2ecedc0a67705b17565c31a83",
+                "sha256:aa39c3c3426e3fd107dcb4bde64ca1e276a65a889d9085a6e4b54ba82420a852",
+                "sha256:e0857375f63e9041e03fedd5b7541f97cf78917ac1b6b06c1fcc9b45375dda69"
+            ],
+            "index": "pypi",
+            "version": "==2.7.4"
         },
         "wtforms": {
             "hashes": [

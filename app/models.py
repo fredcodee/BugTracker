@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
 
 class Project(db.Model):
   __tablename__ = 'project'
+  __searchable__ = ['project_name']
   id = db.Column(db.Integer, primary_key=True)
   project_name = db.Column(db.String(120), nullable=False)
   description = db.Column(db.String(200))
@@ -25,6 +26,8 @@ class Project(db.Model):
 
 class Ticket(db.Model):
   __tablename__ = 'ticket'
+  __searchable__ = ['title', 'status', 'priority',
+                    'ticket_type', 'ref_num', 'assigned_dev']
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(120), nullable=False)
   description = db.Column(db.String(120), nullable=False)

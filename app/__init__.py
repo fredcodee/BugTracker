@@ -2,9 +2,11 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_msearch import Search
 
 db = SQLAlchemy()
 migrate = Migrate()
+search = Search()
 
 
 def create_app():
@@ -12,15 +14,21 @@ def create_app():
 
   app.config['SECRET_KEY'] = 'ASpire2begreat'
   app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://xczqgmpzkonwkf:1abc0c71a01357e5c8d9aa421e3d1a119f34d2385bb13553873a4bbd538afc1b@ec2-54-86-170-8.compute-1.amazonaws.com:5432/d35kj3mpcd9svj"
-  app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-  app.config['WHOOSH_BASE'] = 'whoosh'
+  app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+  app.config['MSEARCH_INDEX_NAME'] = 'msearch'
+  app.config['MSEARCH_BACKEND']='whoosh'
+  app.config['MSEARCH_ENABLE'] = True
+  app.config['MSEARCH_PRIMARY_KEY'] = 'id'
+  
+
 
   db.init_app(app)
   from app.models import User, Project, Ticket, Comment,Ticket_history
   migrate.init_app(app, db)
+  search.init_app(app)
 
   login_manager = LoginManager()
-  login_manager.login_view = 'auth.login'
+  login_manager.login_view = 'forms.login'
   login_manager.init_app(app)
 
   from app.models import User
