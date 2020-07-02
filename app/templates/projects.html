@@ -17,6 +17,11 @@
   </div>
   {% endif%}
   {% endwith %}
+  <div class="search">
+    <form action="/project/search" method="POST">
+      <input type="text" name="search" placeholder="search">
+    </form>
+  </div>
   {% for project in projects%}
     <div>
       <h3>project name: {{project.project_name}}</h3>

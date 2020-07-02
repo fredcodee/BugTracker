@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 from flask_login import login_required , current_user
 #from flask_wtf.file import FileField, FileAllowed
 #from flask_uploads import IMAGES
-#import random
+import random
 
 main = Blueprint('main', __name__)
 
@@ -173,7 +173,7 @@ def remove(idd):
 @login_required
 def createproject():
   if request.method == 'POST':
-    project_name= request.form.get('name')
+    project_name= request.form.get('name').title()
     project_description = request.form.get('description')
 
     project = Project(project_name=project_name, description= project_description)
@@ -191,6 +191,17 @@ def projects():
   projects = Project.query.all()
   return(render_template("projects.html", projects = projects))
 
+#search project
+@main.route("/project/search", methods=["GET", "POST"])
+def p_search():
+  keyword = request.form.get('search').title()
+  results = Project.query.filter_by(project_name=keyword).all()
+  if results:
+    return(render_template("projects.html", projects = results))
+  else:
+    flash("Project not found")
+    return(redirect(url_for("main.projects")))
+
 #edit project
 @main.route("/editproject/<idd>", methods=['POST', 'GET'])
 @login_required
@@ -199,7 +210,7 @@ def edit_project(idd):
     project = Project.query.get(int(idd))
 
     if request.method == 'POST':
-      project_name = request.form.get('name')
+      project_name = request.form.get('name').title()
       project_description = request.form.get('description')
 
       project.project_name =project_name
@@ -208,7 +219,7 @@ def edit_project(idd):
       flash('changes saved')
       return(redirect(url_for('main.projects')))
 
-    return(render_template('editproject.html', project_id =project.id))
+    return(render_template('editproject.html', project =project))
   else:
     abort(404)
 
@@ -267,7 +278,6 @@ def createticket_form(idd):
       comment = request.form.get("comments")
 
       #create ref num
-      import random
       ref_n = []
       for i in range(6):
         n = random.randint(0, 9)
@@ -292,7 +302,8 @@ def createticket_form(idd):
   else:
     abort(404)
 
-#search autocompletion
+#search dropdown
+
 
 
 

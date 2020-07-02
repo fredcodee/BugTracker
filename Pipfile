@@ -27,10 +27,6 @@ Werkzeug = "==1.0.0"
 WTForms = "==2.3.1"
 flask-wtf = "*"
 email-validator = "*"
-flask-msearch = "*"
-whoosh = "*"
-blinker = "*"
-elasticsearch = "==6.3.1"
 
 [requires]
 python_version = "3.7"
