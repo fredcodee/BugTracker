@@ -227,7 +227,17 @@ def edit_project(idd):
 @login_required
 def project_details(idd):
   project = Project.query.get(int(idd))
+
   return(render_template("projectdetails.html", project = project))
+
+#view project tickets
+@main.route("/details/tickets/<idd>")
+@login_required
+def project_tickets(idd):
+  project = Project.query.get(int(idd))
+  mytickets = Ticket.query.filter(Ticket.project_ticket.has(id=int(idd)))
+  return(render_template("tickets.html", tickets=mytickets))
+
 
 
 #TICKETS
