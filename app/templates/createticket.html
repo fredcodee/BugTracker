@@ -28,8 +28,12 @@
       </fieldset>
 
       <fieldset class="assigned">
-        <label for="assigned"> Assigned Developer</label>
-        <input type="email" id="assigned" name="assigned" required placeholder="Email">
+        <label for="assigned"> Assign User</label>
+        <select name="assigned" id="assigned">
+          {% for user in users%}
+          <option value="{{user.email}}">{{user.name}}- {{user.role}}</option>
+          {% endfor %}
+        </select>
       </fieldset>
       
       <fieldset class="priority">

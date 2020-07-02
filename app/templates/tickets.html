@@ -9,6 +9,39 @@
   <div>
     <a href="{{url_for('main.createticket')}}"><button>CREATE NEW TICKET</button></a>
   </div>
+  <div class="filter">
+    <form action="/tickets/search" method="POST">
+      <div>
+        <label for="search">Search</label>
+        <input type="text" id="search" placeholder="title or ref number" name="search">
+      </div>
+      <div>
+        <label for="status">status</label>
+        <select name="status" id="status">
+          <option value="IN PROGRESS">IN PROGRESS</option>
+          <option value="OPEN">OPEN</option>
+          <option value="CLOSED">CLOSED</option>
+          <option value="RESOLVED">RESOLVED</option>
+        </select>
+      </div>
+        <button>Search</button>
+      </div>
+    </form>
+    <form action="/tickets/priority" method="POST">
+      <div>
+        <label for="priority">Ticket Priority</label>
+        <select name="priority" id="priority" required>
+          <option value="NONE">None</option>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+        </select>
+      </div>
+      <div>
+        <button>filter by priority</button>
+      </div>
+    </form>
+  </div>
   <h1>My TICKETS</h1>
   {% with messages = get_flashed_messages() %}
   {% if messages%}

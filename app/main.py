@@ -6,6 +6,7 @@ from flask_login import login_required , current_user
 #from flask_wtf.file import FileField, FileAllowed
 #from flask_uploads import IMAGES
 import random
+from sqlalchemy import or_
 
 main = Blueprint('main', __name__)
 
@@ -59,7 +60,6 @@ def searchuser():
   search = init_search.title()
 
   if init_search:
-    from sqlalchemy import or_
     get_user = User.query.filter(
         or_(User.name == search, User.email == init_search, User.role == search)).all()
     if get_user:
@@ -116,7 +116,6 @@ def searchuser2(idd):
   search = init_search.title()
 
   if init_search:
-    from sqlalchemy import or_
     get_user = User.query.filter(
         or_(User.name == search,User.email == init_search,User.role == search)).all()
     if get_user:
@@ -298,12 +297,39 @@ def createticket_form(idd):
         flash("Assigned developer not found")
         return(redirect(url_for("main.createticket_form", idd = idd)))
 
-    return(render_template("createticket.html", project= project))
+    users = User.query.filter(or_(User.role == "Developer", User.role == "Project Manager")).all()
+    return(render_template("createticket.html", project= project, users=users))
   else:
     abort(404)
 
-#search dropdown
+#search and filter tickets
+@main.route("/tickets/search", methods=["POST", "GET"])
+@login_required
+def tickets_search():
+  search = request.form.get("search")
+  status = request.form.get("status")
 
+  if search:
+    try:
+      search = Ticket.query.filter_by(ref_num = int(search)).all()
+      return(render_template("tickets.html", tickets=search))
+    except:
+      search = Ticket.query.filter_by(title=search).all()
+      return(render_template("tickets.html", tickets=search))
+  elif status:
+    search = Ticket.query.filter_by(status=status).all()
+    return(render_template("tickets.html", tickets=search))
+  else:
+    flash("ticket not found")
+    return(redirect(url_for("main.mytickets")))
+
+
+@main.route("/tickets/priority", methods=["POST", "GET"])
+@login_required
+def tickets_priority():
+  priority = request.form.get("priority")
+  search = Ticket.query.filter_by(priority=priority).all()
+  return(render_template("tickets.html", tickets=search))
 
 
 
