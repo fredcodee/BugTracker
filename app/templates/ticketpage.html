@@ -34,8 +34,18 @@
     </div>
     <div>
       {% for comment in comments%}
-        <small style="color: gray;">{{comment.user_comment.name}}</small>
-        <p>{{comment.details}}</p>
+        {% if comment.user_comment.name == current_user.name %}
+        <div> 
+          <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}}</small>
+          <p>{{comment.details}}</p>
+          <a href="/tickets/comment/delete/{{ticket.id}}/{{comment.id}}"><button>delete</button></a>
+        </div>
+        {% else %}
+        <div>
+          <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}}</small>
+          <p>{{comment.details}}</p>
+        </div>
+        {%endif%}
       {% endfor %}
     </div>
     <hr>

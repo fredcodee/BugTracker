@@ -371,6 +371,15 @@ def add_comment(idd):
     flash("comment added")
     return(redirect(url_for("main.view_ticket", idd = idd)))
 
+#delete comments
+@main.route("/tickets/comment/delete/<idd>/<c_id>")
+@login_required
+def delete_comment(idd, c_id):
+  get_comment = Comment.query.get(int(c_id))
+  db.session.delete(get_comment)
+  db.session.commit()
+  flash("comment deleted")
+  return(redirect(url_for("main.view_ticket", idd = idd)))
 
 
 

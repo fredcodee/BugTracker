@@ -22,7 +22,7 @@
   <div>
     <h3>Assigned Users in this project</h3>
       {% for assigned_user in assigned%}
-        <p>{{assigned_user.name}}</p>
+        <p>{{assigned_user.name}} - {{assigned_user.role}}</p>
       {% endfor%}
   </div>
   <div>
