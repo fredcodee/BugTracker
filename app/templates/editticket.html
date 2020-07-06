@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit ticket</title>
+</head>
+<body>
+  <a href="/home">home</a>
+  <h1>Edit ticket</h1>
+  <div>
+    <form action="" method="POST">
+      <fieldset class="title">
+        <label for="title">Ticket Title</label>
+        <input type="text" id="title" name="title" placeholder="{{ticket.title}}">
+      </fieldset>
+      
+      <fieldset class="description">
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description" placeholder="{{ticket.description}}">
+      </fieldset>
+      
+      <fieldset class="assigned">
+        <label for="assigned"> Assign User</label>
+        <select name="assigned" id="assigned">
+          <option value="N">{{ticket.assigned_dev}}</option>
+          {% for user in users%}
+          <option value="{{user.email}}">{{user.name}}- {{user.role}}</option>
+          {% endfor %}
+        </select>
+      </fieldset>
+      
+      <fieldset class="priority">
+        <label for="priority">Ticket Priority</label>
+        <select name="priority" id="priority">
+          <option value="NONE">{{ticket.priority}}</option>
+          <option value="LOW">LOW</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+        </select>
+      </fieldset>
+      
+      <fieldset class="status">
+        <label for="status">Status</label>
+        <select name="status" id="status">
+          <option value="N">{{ticket.status}}</option>
+          <option value="IN PROGRESS">IN PROGRESS</option>
+          <option value="OPEN">OPEN</option>
+          <option value="CLOSED">CLOSED</option>
+          <option value="RESOLVED">RESOLVED</option>
+        </select>
+      </fieldset>
+      
+      <fieldset class="type">
+        <label for="type"> Ticket Type</label>
+        <select name="type" id="type">
+          <option value="N">{{ticket.ticket_type}}</option>
+          <option value="BUG ERRORS">BUG ERRORS</option>
+          <option value="FEATURE REQUESTS">FEATURE REQUESTS</option>
+          <option value="ACTION REQUIRED">ACTION REQUIRED</option>
+          <option value="FILE/DOCUMENT REQUEST">FILE/DOCUMENT REQUEST</option>
+        </select>
+      </fieldset>
+      <div class="submit_buttons">
+        <input type="submit">
+      </div>
+
+    </form>
+  </div>
+</body>
+</html>

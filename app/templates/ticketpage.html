@@ -15,6 +15,9 @@
     </div>
     {% endif%}
     {% endwith %}
+    <div>
+      <a href="/tickets/edit/{{ticket.id}}">Edit Ticket</a>
+    </div>
     <h1>{{ticket.title}}</h1>
     <p>description: {{ticket.description}}</p>
     <p>submitter: {{ticket.user_ticket.name}}</p>

@@ -381,7 +381,44 @@ def delete_comment(idd, c_id):
   flash("comment deleted")
   return(redirect(url_for("main.view_ticket", idd = idd)))
 
+#edit ticket
+@main.route("/tickets/edit/<idd>", methods=["POST", "GET"])
+@login_required
+def edit_ticket(idd):
+  get_ticket = Ticket.query.get(int(idd))
+  #admin and project manager all access
+  if current_user.role != "Developer":
+    if request.method == "POST":
+      title = request.form.get("title")
+      description = request.form.get("description")
+      assigned = request.form.get("assigned")
+      priority = request.form.get("priority")
+      status = request.form.get("status")
+      ticket_type = request.form.get("type")
 
+      #update
+      if title:
+        get_ticket.title = title
+      if description:
+        get_ticket.description= description
+      if assigned != "N":
+        get_ticket.assigned_dev = assigned
+      if priority != "NONE":
+        get_ticket.priority = priority
+      if status != "N":
+        get_ticket.status= status
+      if ticket_type != "N":
+        get_ticket.ticket_type  = ticket_type
+      
+      db.session.commit()
+      flash('changes saved')
+      return(redirect(url_for("main.view_ticket", idd=idd)))
+
+    users = User.query.filter( or_(User.role == "Developer", User.role == "Project Manager")).all()
+    return(render_template("editticket.html", ticket=get_ticket, users=users))
+      
+
+  #developer only status request
 
 
 
