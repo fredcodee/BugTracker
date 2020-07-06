@@ -52,16 +52,20 @@
   {% endwith %}
   <div>
     {%for ticket in tickets %}
-    <h3>title: {{ticket.title}}</h3>
-    <p>description: {{ticket.description}}</p>
-    <p>submitter: {{ticket.user_ticket.name}}</p>
-    <p>project name: {{ticket.project_ticket.project_name}}</p>
-    <p>assigned to: {{ticket.assigned_dev}}</p>
-    <p>status: {{ticket.status}}</p>
-    <p>priority: {{ticket.priority}}</p>
-    <p>ticket type: {{ticket.ticket_type}}</p>
-    <p>ref number: {{ticket.ref_num}}</p>
-    <p>created on: {{ticket.date}}</p>
+    <a href="/tickets/view/{{ticket.id}}">
+      <div>
+        <h3>title: {{ticket.title}}</h3>
+        <p>description: {{ticket.description}}</p>
+        <p>submitter: {{ticket.user_ticket.name}}</p>
+        <p>project name: {{ticket.project_ticket.project_name}}</p>
+        <p>assigned to: {{ticket.assigned_dev}}</p>
+        <p>status: {{ticket.status}}</p>
+        <p>priority: {{ticket.priority}}</p>
+        <p>ticket type: {{ticket.ticket_type}}</p>
+        <p>ref number: {{ticket.ref_num}}</p>
+        <p>created on: {{ticket.date}}</p>
+      </div>
+    </a>
     <hr>
     {% endfor%}
   </div>

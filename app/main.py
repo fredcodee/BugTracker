@@ -297,10 +297,17 @@ def createticket_form(idd):
       check_assigned_dev = User.query.filter_by(email=assigned).first()
       if check_assigned_dev:
         #save ticket to database
-        new_ticket = Ticket(title = title, description = description,assigned_dev = assigned,ticket_type = ticket_type, priority = priority,status = status, comments = comment, ref_num = int(ref_num), user_ticket= current_user, project_ticket = project)
+        new_ticket = Ticket(title = title, description = description,assigned_dev = assigned,ticket_type = ticket_type, priority = priority,status = status, ref_num = int(ref_num), user_ticket= current_user, project_ticket = project)
 
         db.session.add(new_ticket)
         db.session.commit()
+
+        if comment:
+          get_ticket=Ticket.query.filter_by(ref_num = int(ref_num)).first()
+          new_comment = Comment(details=comment, user_comment=current_user, ticket_comments = get_ticket)
+          db.session.add(new_comment)
+          db.session.commit()
+
         flash("Ticket Created")
         return(redirect(url_for("main.mytickets")))
       else:
@@ -340,6 +347,14 @@ def tickets_priority():
   priority = request.form.get("priority")
   search = Ticket.query.filter_by(priority=priority).all()
   return(render_template("tickets.html", tickets=search))
+
+#view ticket page
+@main.route("/tickets/view/<idd>")
+@login_required
+def view_ticket(idd):
+  ticket = Ticket.query.get(int(idd))
+  comments = Comment.query.filter(Comment.ticket_comments.has(id=int(idd)))
+  return(render_template("ticketpage.html", ticket = ticket, comments = comments))
 
 
 

@@ -37,6 +37,7 @@ class Ticket(db.Model):
   date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
   comments = db.relationship('Comment', backref='ticket_comments', lazy='dynamic')
   assigned_dev = db.Column(db.String(120), nullable=False)#email
+  #history = db.relationship('Ticket_history', backref='ticket_history', lazy='dynamic')
   files = db.Column(db.String(500))
 
 class Comment(db.Model):
@@ -44,8 +45,10 @@ class Comment(db.Model):
   details = db.Column(db.String(400))
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
   ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
+  #date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 class Ticket_history(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   details = db.Column(db.String(500))
   ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
+  #date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

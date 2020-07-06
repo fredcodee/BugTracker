@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket page</title>
+</head>
+<body>
+  <div>
+    <a href="/home">home</a>
+    {% with messages = get_flashed_messages() %}
+    {% if messages%}
+    <div class="alert alert-danger" role="alert">
+      {{ messages[0] }}
+    </div>
+    {% endif%}
+    {% endwith %}
+    <h1>{{ticket.title}}</h1>
+    <p>description: {{ticket.description}}</p>
+    <p>submitter: {{ticket.user_ticket.name}}</p>
+    <p>project name: {{ticket.project_ticket.project_name}}</p>
+    <p>assigned to: {{ticket.assigned_dev}}</p>
+    <p>status: {{ticket.status}}</p>
+    <p>priority: {{ticket.priority}}</p>
+    <p>ticket type: {{ticket.ticket_type}}</p>
+    <p>ref number: {{ticket.ref_num}}</p>
+    <p>created on: {{ticket.date}}</p>
+    <hr>
+    <h3>Comments</h3>
+    <div>
+      {% for comment in comments%}
+        <small style="color: gray;">{{comment.user_comment.name}}</small>
+        <p>{{comment.details}}</p>
+      {% endfor %}
+    </div>
+    <hr>
+    <div>
+      <h3>Ticket history</h3>
+    </div>
+
+    <p></p>
+  </div>
+</body>
+</html>
