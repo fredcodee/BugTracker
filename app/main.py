@@ -356,6 +356,22 @@ def view_ticket(idd):
   comments = Comment.query.filter(Comment.ticket_comments.has(id=int(idd)))
   return(render_template("ticketpage.html", ticket = ticket, comments = comments))
 
+#Comments
+#add comments
+@main.route("/tickets/comment/<idd>", methods = ["GET", "POST"])
+@login_required
+def add_comment(idd):
+  get_ticket = Ticket.query.get(int(idd))
+  comment = request.form.get("comment")
+  if comment:
+    new_comment = Comment(details=comment, user_comment=current_user, ticket_comments=get_ticket)
+    db.session.add(new_comment)
+    db.session.commit()
+
+    flash("comment added")
+    return(redirect(url_for("main.view_ticket", idd = idd)))
+
+
 
 
 
