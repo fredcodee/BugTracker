@@ -347,12 +347,24 @@ def tickets_priority():
   return(render_template("tickets.html", tickets=search))
 
 #view ticket page
-@main.route("/tickets/view/<idd>")
+@main.route("/tickets/view/<idd>", methods=["POST", "GET"])
 @login_required
 def view_ticket(idd):
   ticket = Ticket.query.get(int(idd))
+
+  #add images
+  form = Add_images()
+  if request.method == "POST":
+    if form.validate_on_submit():
+      new_image = Ticket_image(image=photos.save(form.image.data), t_image= ticket, user_images = current_user)
+      db.session.add(new_image)
+      db.session.commit()
+      flash("image uploaded")
+      return(redirect(url_for("main.view_ticket", idd=idd)))
+
+  #view ticket
   comments = Comment.query.filter(Comment.ticket_comments.has(id=int(idd)))
-  return(render_template("ticketpage.html", ticket = ticket, comments = comments))
+  return(render_template("ticketpage.html", ticket = ticket, comments = comments, form =form))
 
 #Comments
 #add comments
@@ -418,19 +430,6 @@ def edit_ticket(idd):
 
   #developer only status request
 
-
-#add image to ticket
-@main.route("/tickets/images/<idd>")
-@login_required
-def add_images(idd):
-  form = Add_images()
-  get_ticket = Ticket.query.get(int(idd))
-
-  if form.validate_on_submit():
-    new_image = Ticket_image(image=photos.save(form.image.data), t_image= get_ticket, user_images = current_user)
-    db.session.add(new_image)
-    db.session.commit()
-    return(redirect(url_for('main.admin')))
 
 
 #written by Wilfred 

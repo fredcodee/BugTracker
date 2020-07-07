@@ -55,7 +55,7 @@
     <div>
       <h3>Images</h3>
       <div>
-        <form action="/tickets/images/{{ticket.id}}" method="POST" enctype="multipart/form-data">
+        <form action="/tickets/view/{{ticket.id}}" method="POST" enctype="multipart/form-data">
           {{form.csrf_token}}
           <div>
             <label>Upload Image</label>
