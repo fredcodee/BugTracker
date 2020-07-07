@@ -53,6 +53,20 @@
     </div>
     <hr>
     <div>
+      <h3>Images</h3>
+      <div>
+        <form action="/tickets/images/{{ticket.id}}" method="POST" enctype="multipart/form-data">
+          {{form.csrf_token}}
+          <div>
+            <label>Upload Image</label>
+            {{form.image(class="form-control")}}
+          </div>
+          <input type="submit">
+        </form>
+      </div>
+    </div>
+    <hr>
+    <div>
       <h3>Ticket history</h3>
     </div>
 

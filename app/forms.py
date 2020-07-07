@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import InputRequired, Email, Length
+from flask_wtf.file import FileField, FileAllowed
+from flask_uploads import IMAGES
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import User
 from app import db
@@ -23,6 +25,11 @@ class RegisterForm(FlaskForm):
   role = SelectField('role', choices=[(
       'Admin', 'Admin'), ('Project Manager', 'Project Manager'), ('Developer', 'Developer')], validators=[InputRequired()])
   submit = SubmitField('Register')
+
+class Add_images(FlaskForm):
+  image = FileField('image', validators=[
+                    FileAllowed(IMAGES, 'only images accepted.')])
+
 
 #login
 @forms.route("/login", methods=['GET', 'POST'])

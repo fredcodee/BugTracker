@@ -1,10 +1,8 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for, abort
-from app.models import User, Project, Ticket, Comment, Ticket_history
-from app import db
-from flask_wtf import FlaskForm
+from app.models import User, Project, Ticket, Comment, Ticket_history, Ticket_image
+from app.forms import Add_images
+from app import db, photos
 from flask_login import login_required , current_user
-#from flask_wtf.file import FileField, FileAllowed
-#from flask_uploads import IMAGES
 import random
 from sqlalchemy import or_
 
@@ -421,7 +419,18 @@ def edit_ticket(idd):
   #developer only status request
 
 
+#add image to ticket
+@main.route("/tickets/images/<idd>")
+@login_required
+def add_images(idd):
+  form = Add_images()
+  get_ticket = Ticket.query.get(int(idd))
 
+  if form.validate_on_submit():
+    new_image = Ticket_image(image=photos.save(form.image.data), t_image= get_ticket, user_images = current_user)
+    db.session.add(new_image)
+    db.session.commit()
+    return(redirect(url_for('main.admin')))
 
 
 #written by Wilfred 
