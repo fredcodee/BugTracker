@@ -63,7 +63,20 @@
           </div>
           <input type="submit">
         </form>
+        <hr>
       </div>
+      <div>
+        {%for image in images%}
+          {%if image.user_images.name == current_user.name%}
+            <div>
+              <small style="color: gray;">{{image.user_images.name}} - {{image.user_images.role}}</small>
+              <img  src="{{url_for('static', filename='ticketfiles/%s' % image['image'])}}" alt="" style="width: 25%; height: 30%;">
+              <a href="/tickets/images/delete/{{ticket.id}}/{{image.id}}"><button>delete</button></a>
+            </div>
+          {%endif%}
+        {%endfor%}
+      </div>
+
     </div>
     <hr>
     <div>

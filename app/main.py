@@ -362,9 +362,10 @@ def view_ticket(idd):
       flash("image uploaded")
       return(redirect(url_for("main.view_ticket", idd=idd)))
 
-  #view ticket
+  #view comment & images
   comments = Comment.query.filter(Comment.ticket_comments.has(id=int(idd)))
-  return(render_template("ticketpage.html", ticket = ticket, comments = comments, form =form))
+  images = Ticket_image.query.filter(Ticket_image.t_image.has(id=int(idd)))
+  return(render_template("ticketpage.html", ticket = ticket, comments = comments,images=images, form =form))
 
 #Comments
 #add comments
@@ -430,6 +431,6 @@ def edit_ticket(idd):
 
   #developer only status request
 
-
+#delete images
 
 #written by Wilfred 
