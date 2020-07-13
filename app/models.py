@@ -14,7 +14,6 @@ class User(UserMixin, db.Model):
   projects = db.relationship("Project", secondary=assign, backref='team')
   tickets = db.relationship('Ticket', backref='user_ticket', lazy='dynamic')
   ticket_comment =db.relationship('Comment', backref='user_comment', lazy='dynamic')
-  images = db.relationship('Ticket_image', backref='user_images', lazy='dynamic')
 
 class Project(db.Model):
   __tablename__ = 'project'
@@ -39,24 +38,15 @@ class Ticket(db.Model):
   comments = db.relationship('Comment', backref='ticket_comments', lazy='dynamic')
   assigned_dev = db.Column(db.String(120))#email
   history = db.relationship('Ticket_history', backref='ticket_history', lazy='dynamic')
-  ticket_images = db.relationship(
-      'Ticket_image', backref='t_image', lazy='dynamic')
+
 
 class Comment(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   details = db.Column(db.String(400))
-  user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-  ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
-  date = db.Column(db.DateTime, default=datetime.utcnow)
-
-
-class Ticket_image(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
   image = db.Column(db.String(500))
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
   ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
   date = db.Column(db.DateTime, default=datetime.utcnow)
-
 
 class Ticket_history(db.Model):
   id = db.Column(db.Integer, primary_key=True)

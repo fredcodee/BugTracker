@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for, abort
-from app.models import User, Project, Ticket, Comment, Ticket_history, Ticket_image
-from app.forms import Add_images
+from app.models import User, Project, Ticket, Comment, Ticket_history
+from app.forms import Comments
 from app import db, photos
 from flask_login import login_required , current_user
 import random
@@ -347,40 +347,29 @@ def tickets_priority():
   return(render_template("tickets.html", tickets=search))
 
 #view ticket page
-@main.route("/tickets/view/<idd>", methods=["POST", "GET"])
+@main.route("/tickets/view/<idd>", methods =["POST","GET"])
 @login_required
 def view_ticket(idd):
   ticket = Ticket.query.get(int(idd))
 
-  #add images
-  form = Add_images()
-  if request.method == "POST":
-    if form.validate_on_submit():
-      new_image = Ticket_image(image=photos.save(form.image.data), t_image= ticket, user_images = current_user)
-      db.session.add(new_image)
+  #add comment
+  form = Comments()
+  if request.method == "POST" and form.validate_on_submit():
+    #treating empty data werkzeug.FileStorage with try&except
+    try:
+      new_comment = Comment(details=form.comment.data, image=photos.save(form.image.data), user_comment=current_user, ticket_comments= ticket)
+      db.session.add(new_comment)
       db.session.commit()
-      flash("image uploaded")
+      flash("comment added")
       return(redirect(url_for("main.view_ticket", idd=idd)))
+    except:
+      flash("empty field")
+      return(redirect(url_for("main.view_ticket", idd=idd)))
+    
 
-  #view comment & images
   comments = Comment.query.filter(Comment.ticket_comments.has(id=int(idd)))
-  images = Ticket_image.query.filter(Ticket_image.t_image.has(id=int(idd)))
-  return(render_template("ticketpage.html", ticket = ticket, comments = comments,images=images, form =form))
+  return(render_template("ticketpage.html", ticket = ticket, comments = comments, form = form))
 
-#Comments
-#add comments
-@main.route("/tickets/comment/<idd>", methods = ["GET", "POST"])
-@login_required
-def add_comment(idd):
-  get_ticket = Ticket.query.get(int(idd))
-  comment = request.form.get("comment")
-  if comment:
-    new_comment = Comment(details=comment, user_comment=current_user, ticket_comments=get_ticket)
-    db.session.add(new_comment)
-    db.session.commit()
-
-    flash("comment added")
-    return(redirect(url_for("main.view_ticket", idd = idd)))
 
 #delete comments
 @main.route("/tickets/comment/delete/<idd>/<c_id>")
@@ -431,6 +420,22 @@ def edit_ticket(idd):
 
   #developer only status request
 
-#delete images
+#combine comment and images 
+
+
+'''
+@main.route("/admin/delete")
+@login_required
+def admin_delete():
+  try:
+    get_comment = Comment.query.delete()
+    get_images = Ticket_image.query.delete()
+    db.session.commit()
+    flash("deleted")
+    return(redirect(url_for("main.mytickets")))
+  except:
+    flash("code not working!")
+    return(redirect(url_for("main.mytickets")))'''
+
 
 #written by Wilfred 

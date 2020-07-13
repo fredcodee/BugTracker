@@ -31,8 +31,17 @@
     <hr>
     <h3>Comments</h3>
     <div>
-      <form action="/tickets/comment/{{ticket.id}}" method="POST">
-        <input type="text" name= "comment" placeholder="comment">
+      <form action="/tickets/view/{{ticket.id}}" method="POST" enctype="multipart/form-data">
+        {{form.csrf_token}}
+        <div>
+          <label for="commnet">Comment</label>
+          {{form.comment}}
+        </div>
+        <div>
+          <label>Upload Image</label>
+          {{form.image(class="form-control")}}
+        </div>
+        <input type="submit">
       </form>
     </div>
     <div>
@@ -41,42 +50,17 @@
         <div> 
           <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}}</small>
           <p>{{comment.details}}</p>
+          <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt="" style="width: 25%; height: 30%;">
           <a href="/tickets/comment/delete/{{ticket.id}}/{{comment.id}}"><button>delete</button></a>
         </div>
         {% else %}
         <div>
           <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}}</small>
           <p>{{comment.details}}</p>
+          <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt="" style="width: 25%; height: 30%;">
         </div>
         {%endif%}
       {% endfor %}
-    </div>
-    <hr>
-    <div>
-      <h3>Images</h3>
-      <div>
-        <form action="/tickets/view/{{ticket.id}}" method="POST" enctype="multipart/form-data">
-          {{form.csrf_token}}
-          <div>
-            <label>Upload Image</label>
-            {{form.image(class="form-control")}}
-          </div>
-          <input type="submit">
-        </form>
-        <hr>
-      </div>
-      <div>
-        {%for image in images%}
-          {%if image.user_images.name == current_user.name%}
-            <div>
-              <small style="color: gray;">{{image.user_images.name}} - {{image.user_images.role}}</small>
-              <img  src="{{url_for('static', filename='ticketfiles/%s' % image['image'])}}" alt="" style="width: 25%; height: 30%;">
-              <a href="/tickets/images/delete/{{ticket.id}}/{{image.id}}"><button>delete</button></a>
-            </div>
-          {%endif%}
-        {%endfor%}
-      </div>
-
     </div>
     <hr>
     <div>

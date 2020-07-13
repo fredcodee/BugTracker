@@ -26,7 +26,8 @@ class RegisterForm(FlaskForm):
       'Admin', 'Admin'), ('Project Manager', 'Project Manager'), ('Developer', 'Developer')], validators=[InputRequired()])
   submit = SubmitField('Register')
 
-class Add_images(FlaskForm):
+class Comments(FlaskForm):
+  comment = StringField('comment')
   image = FileField('image', validators=[
                     FileAllowed(IMAGES, 'only images accepted.')])
 
