@@ -48,14 +48,14 @@
       {% for comment in comments%}
         {% if comment.user_comment.name == current_user.name %}
         <div> 
-          <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}}</small>
+          <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}} - {{comment.date}}</small>
           <p>{{comment.details}}</p>
           <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt="" style="width: 25%; height: 30%;">
           <a href="/tickets/comment/delete/{{ticket.id}}/{{comment.id}}"><button>delete</button></a>
         </div>
         {% else %}
         <div>
-          <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}}</small>
+          <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}} - {{comment.date}}</small>
           <p>{{comment.details}}</p>
           <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt="" style="width: 25%; height: 30%;">
         </div>
@@ -65,6 +65,12 @@
     <hr>
     <div>
       <h3>Ticket history</h3>
+      <div>
+        {% for h in history%}
+          <small>{{h.details}}</small>
+          <small> on {{h.date}}</small>
+        {% endfor %}
+      </div>
     </div>
 
     <p></p>

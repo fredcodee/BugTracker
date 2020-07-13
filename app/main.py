@@ -239,6 +239,14 @@ def project_tickets(idd):
 
 
 #TICKETS
+
+#TICKET HISTORY
+def add_log(name,get_ticket,log):
+  #add log to ticket history
+  log=Ticket_history(details="%s %s " %(name, log),ticket_history = get_ticket )
+  db.session.add(log)
+  db.session.commit()
+
 #view tickets
 @main.route("/mytickets")
 @login_required
@@ -282,7 +290,6 @@ def createticket_form(idd):
       priority = request.form.get("priority")
       status = request.form.get("status")
       ticket_type = request.form.get("type")
-      comment = request.form.get("comments")
 
       #create ref num
       ref_n = []
@@ -300,11 +307,10 @@ def createticket_form(idd):
         db.session.add(new_ticket)
         db.session.commit()
 
-        if comment:
-          get_ticket=Ticket.query.filter_by(ref_num = int(ref_num)).first()
-          new_comment = Comment(details=comment, user_comment=current_user, ticket_comments = get_ticket)
-          db.session.add(new_comment)
-          db.session.commit()
+        #add log to ticket history
+        get_ticket = Ticket.query.filter_by(title=title)
+        log = "created this ticket"
+        add_log(current_user.name, get_ticket, log)
 
         flash("Ticket Created")
         return(redirect(url_for("main.mytickets")))
@@ -360,6 +366,9 @@ def view_ticket(idd):
       new_comment = Comment(details=form.comment.data, image=photos.save(form.image.data), user_comment=current_user, ticket_comments= ticket)
       db.session.add(new_comment)
       db.session.commit()
+      #addlog to ticket history
+      log= "commented on this ticket"
+      add_log(current_user.name, ticket, log)
       flash("comment added")
       return(redirect(url_for("main.view_ticket", idd=idd)))
     except:
@@ -368,7 +377,8 @@ def view_ticket(idd):
     
 
   comments = Comment.query.filter(Comment.ticket_comments.has(id=int(idd)))
-  return(render_template("ticketpage.html", ticket = ticket, comments = comments, form = form))
+  history= Ticket_history.query.filter(Ticket_history.ticket_history.has(id=int(idd)))
+  return(render_template("ticketpage.html", ticket = ticket, comments = comments,history=history, form = form))
 
 
 #delete comments
@@ -378,6 +388,12 @@ def delete_comment(idd, c_id):
   get_comment = Comment.query.get(int(c_id))
   db.session.delete(get_comment)
   db.session.commit()
+
+  #add log to TH
+  get_ticket = Ticket.query.get(int(idd))
+  log = "deleted a comment"
+  add_log(current_user.name,get_ticket,log)
+
   flash("comment deleted")
   return(redirect(url_for("main.view_ticket", idd = idd)))
 
@@ -410,6 +426,9 @@ def edit_ticket(idd):
       if ticket_type != "N":
         get_ticket.ticket_type  = ticket_type
       
+      #add log to TH
+      log="Edited this ticket"
+      add_log(current_user.name, get_ticket,log)
       db.session.commit()
       flash('changes saved')
       return(redirect(url_for("main.view_ticket", idd=idd)))
@@ -420,8 +439,9 @@ def edit_ticket(idd):
 
   #developer only status request
 
-#combine comment and images 
 
+
+ 
 
 '''
 @main.route("/admin/delete")
