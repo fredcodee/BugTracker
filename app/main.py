@@ -308,7 +308,7 @@ def createticket_form(idd):
         db.session.commit()
 
         #add log to ticket history
-        get_ticket = Ticket.query.filter_by(title=title)
+        get_ticket = Ticket.query.filter_by(title=title).first()
         log = "created this ticket"
         add_log(current_user.name, get_ticket, log)
 
@@ -437,7 +437,22 @@ def edit_ticket(idd):
     return(render_template("editticket.html", ticket=get_ticket, users=users))
       
 
-  #developer only status request
+  #developer only status request(feature)
+
+#delete tickets
+@main.route("/tickets/delete/<idd>")
+@login_required
+def delete_ticket(idd):
+  #for admin and project manager
+  if current_user.role != "Developer":
+    get_ticket = Ticket.query.get(int(idd))
+    db.session.delete(get_ticket)
+    db.session.commit()
+    flash('Ticket deleted')
+    return(redirect(url_for("main.view_ticket", idd=idd)))
+  flash('you dont have access to this request')
+  return(redirect(url_for("main.mtickets")))
+
 
 
 

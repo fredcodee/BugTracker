@@ -18,6 +18,9 @@
     <div>
       <a href="/tickets/edit/{{ticket.id}}">Edit Ticket</a>
     </div>
+    <div>
+      <a href="/tickets/delete/{{ticket.id}}">Delete</a>
+    </div>
     <h1>{{ticket.title}}</h1>
     <p>description: {{ticket.description}}</p>
     <p>submitter: {{ticket.user_ticket.name}}</p>
@@ -67,8 +70,10 @@
       <h3>Ticket history</h3>
       <div>
         {% for h in history%}
-          <small>{{h.details}}</small>
-          <small> on {{h.date}}</small>
+          <div>
+            <small>{{h.details}}</small>
+            <small> on {{h.date}}</small>
+          </div>
         {% endfor %}
       </div>
     </div>
