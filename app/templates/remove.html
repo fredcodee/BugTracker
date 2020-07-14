@@ -22,12 +22,13 @@
   </div>
   <div>
     <h3>Assigned Users in this project</h3>
-    {% for assigned_user in assigned%}
     <form action="/remove/{{project.id}}" method="POST">
-      {{assigned_user.name}} {{assigned_user.role}}<input type="checkbox" value="{{assigned_user.id}}" name="user"> <br>
+      {% for assigned_user in assigned%}
+        {{assigned_user.name}} {{assigned_user.role}}<input type="checkbox" value="{{assigned_user.id}}" name="user"> <br>
+      {% endfor%}
       <input type="submit">
     </form>
-    {% endfor%}
+    
   </div>
   </div>
 </body>

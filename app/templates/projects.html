@@ -6,9 +6,11 @@
   <title>projects</title>
 </head>
 <body>
-  <div>
-    <a href="{{url_for('main.createproject')}}"><button>CREATE NEW PROJECT</button></a>
-  </div>
+  {%if current_user.role == "Admin"%}
+    <div>
+      <a href="{{url_for('main.createproject')}}"><button>CREATE NEW PROJECT</button></a>
+    </div>
+  {%endif%}
   <h1>My Projects</h1>
   {% with messages = get_flashed_messages() %}
   {% if messages%}

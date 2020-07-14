@@ -26,7 +26,7 @@ def profile(user):
     get_user = User.query.filter_by(name=user).first()
     return(render_template("profile.html", get_user=get_user))
 
-#show all users for manage role assignment
+#show all users for manage role assignment(Admin)
 @main.route("/managerole", methods=["GET","POST"])
 @login_required
 def mra():
@@ -38,67 +38,79 @@ def mra():
   else:
     abort(404)
 
-#pagination for manage roles
+#pagination for manage roles(Admin)
 @main.route("/managerole/show", methods=["GET", "POST"])
 @login_required
 def pagenum():
-  num= request.form.get("pagenum")
-  if num:
-    items_num = int(num)
-    users = User.query.paginate(1, items_num, False).items
-    return(render_template("mra.html", users=users))
+  if current_user.role == "Admin":
+    num= request.form.get("pagenum")
+    if num:
+      items_num = int(num)
+      users = User.query.paginate(1, items_num, False).items
+      return(render_template("mra.html", users=users))
+    else:
+      return(redirect(url_for("main.mra")))
   else:
-    return(redirect(url_for("main.mra")))
+    abort(404)
 
-#search for users in manage role assignment
+#search for users in manage role assignment(Admin)
 @main.route("/managerole/search", methods=["GET", "POST"])
 @login_required
 def searchuser():
-  init_search = request.form.get("search")
-  search = init_search.title()
+  if current_user.role == "Admin":
+    init_search = request.form.get("search")
+    search = init_search.title()
 
-  if init_search:
-    get_user = User.query.filter(
-        or_(User.name == search, User.email == init_search, User.role == search)).all()
-    if get_user:
-      return(render_template("mra.html", users=get_user))
+    if init_search:
+      get_user = User.query.filter(
+          or_(User.name == search, User.email == init_search, User.role == search)).all()
+      if get_user:
+        return(render_template("mra.html", users=get_user))
+      else:
+        flash("user not found")
+        return(redirect(url_for("main.mra")))
     else:
-      flash("user not found")
+      flash("please recheck and type the correct details needed")
       return(redirect(url_for("main.mra")))
   else:
-    flash("please recheck and type the correct details needed")
-    return(redirect(url_for("main.mra")))
+    abort(404)
 
-#assign role
+#assign role (Admin)
 @main.route("/assign/<idd>", methods=["POST"])
 @login_required
 def assign(idd):
-  get_user = User.query.get(int(idd))
-  role = request.form.get("selection")
+  if current_user.role == "Admin":
+    get_user = User.query.get(int(idd))
+    role = request.form.get("selection")
 
-  if get_user and role != "SL":
-    get_user.role = role
-    db.session.commit()
-    flash("New role assigned")
-    return(redirect(url_for("main.mra")))
+    if get_user and role != "SL":
+      get_user.role = role
+      db.session.commit()
+      flash("New role assigned")
+      return(redirect(url_for("main.mra")))
+    else:
+      flash("invalid / no role was assigned")
+      return(redirect(url_for("main.mra")))
   else:
-    flash("invalid / no role was assigned")
-    return(redirect(url_for("main.mra")))
+    abort(404)
 
 
-#MANAGE PROJECT USERS
+#MANAGE PROJECT USERS (Admin & Project Manager)
 #view porjects
 @main.route("/manageprojects")
 @login_required
 def manageprojects():
-  projects = Project.query.all()
-  return(render_template("mpr.html", projects=projects))
+  if current_user.role == "Admin" or current_user.role == "Project Manager":
+    projects = Project.query.all()
+    return(render_template("mpr.html", projects=projects))
+  else:
+    abort(404)
 
 #view selected project
 @main.route("/AddToProject/<idd>")
 @login_required
 def AddToProject(idd):
-  if current_user.role == "Admin":
+  if current_user.role == "Admin" or current_user.role == "Project Manager":
     project = Project.query.get(int(idd))
     assigned_users = project.team
     return(render_template("assign.html", project = project, assigned = assigned_users))
@@ -147,7 +159,7 @@ def adduser(idd):
 @main.route("/remove/<idd>" , methods= ["POST", "GET"])
 @login_required
 def remove(idd):
-  if current_user.role == 'Admin':
+  if current_user.role == "Admin" or current_user.role == "Project Manager":
     if request.method == 'POST':
       users = request.form.getlist('user')
       get_project = Project.query.get(int(idd))
@@ -165,27 +177,35 @@ def remove(idd):
     abort(404)
 
 #PROJECTS
-#create project
+#create project(Admin)
 @main.route("/createproject", methods=["GET", "POST"])
 @login_required
 def createproject():
-  if request.method == 'POST':
-    project_name= request.form.get('name').title()
-    project_description = request.form.get('description')
+  if current_user.role == "Admin":
+    if request.method == 'POST':
+      project_name= request.form.get('name').title()
+      project_description = request.form.get('description')
 
-    project = Project(project_name=project_name, description= project_description)
-    db.session.add(project)
-    db.session.commit()
-    flash('project created')
-    return(redirect(url_for('main.createproject')))
+      project = Project(project_name=project_name, description= project_description)
+      db.session.add(project)
+      db.session.commit()
+      flash('project created')
+      return(redirect(url_for('main.createproject')))
 
-  return(render_template('createproject.html'))
+    return(render_template('createproject.html'))
+  else:
+    abort(404)
 
 #view project
 @main.route("/projects")
 @login_required
 def projects():
-  projects = Project.query.all()
+  if current_user.role == "Admin":
+    projects = Project.query.all()
+  elif current_user.role == "Project Manager":
+    projects = " "
+  elif current_user.role == "Developer":
+    projects = " "
   return(render_template("projects.html", projects = projects))
 
 #search project
