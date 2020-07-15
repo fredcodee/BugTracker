@@ -94,6 +94,19 @@ def assign(idd):
   else:
     abort(404)
 
+#delete user(Admin)
+@main.route("/manageusers/delete/<idd>")
+@login_required
+def delete_user(idd):
+  if current_user.role == "Admin":
+    get_user = User.query.get(int(idd))
+    if get_user:
+      db.session.delete(get_user)
+      db.session.commit()
+      flash("user deleted")
+      return(redirect(url_for("main.mra")))
+  else:
+    abort(404)
 
 #MANAGE PROJECT USERS (Admin & Project Manager)
 #view porjects
@@ -202,10 +215,12 @@ def createproject():
 def projects():
   if current_user.role == "Admin":
     projects = Project.query.all()
-  elif current_user.role == "Project Manager":
-    projects = " "
-  elif current_user.role == "Developer":
-    projects = " "
+  elif current_user.role == "Project Manager" or current_user.role == "Developer":
+    projects=[]
+    all_project = Project.query.all()
+    for project in all_project:
+      if current_user.id in project.team:
+        projects.append(project)
   return(render_template("projects.html", projects = projects))
 
 #search project
@@ -383,7 +398,11 @@ def view_ticket(idd):
   if request.method == "POST" and form.validate_on_submit():
     #treating empty data werkzeug.FileStorage with try&except
     try:
-      new_comment = Comment(details=form.comment.data, image=photos.save(form.image.data), user_comment=current_user, ticket_comments= ticket)
+      images = form.image.data
+      if not images or images == " ":
+        new_comment = Comment(details=form.comment.data, image=" ", user_comment=current_user, ticket_comments=ticket)
+      else:
+        new_comment = Comment(details=form.comment.data, image=photos.save(images), user_comment=current_user, ticket_comments= ticket)
       db.session.add(new_comment)
       db.session.commit()
       #addlog to ticket history
@@ -469,9 +488,9 @@ def delete_ticket(idd):
     db.session.delete(get_ticket)
     db.session.commit()
     flash('Ticket deleted')
-    return(redirect(url_for("main.view_ticket", idd=idd)))
+    return(redirect(url_for("main.mytickets")))
   flash('you dont have access to this request')
-  return(redirect(url_for("main.mtickets")))
+  return(redirect(url_for("main.mytickets")))
 
 
 
