@@ -216,11 +216,7 @@ def projects():
   if current_user.role == "Admin":
     projects = Project.query.all()
   elif current_user.role == "Project Manager" or current_user.role == "Developer":
-    projects=[]
-    all_project = Project.query.all()
-    for project in all_project:
-      if current_user.id in project.team:
-        projects.append(project)
+    projects=Project.query.filter(Project.team.any(id = current_user.id)).all()
   return(render_template("projects.html", projects = projects))
 
 #search project
@@ -291,14 +287,14 @@ def mytickets():
   if current_user.role == "Admin":
     return(render_template("tickets.html", tickets=tickets))
   
-  elif current_user =="Project manager":
+  elif current_user.role =="Project manager":
     #project manager restricted to only theirs
-    mytickets=Ticket.query.filter(Ticket.user_ticket.has(email=current_user.email))
+    mytickets=Ticket.query.filter_by(Ticket.user_ticket.has(email=current_user.email)).all()
     return(render_template("tickets.html", tickets=mytickets))
     
-  elif current_user == "Developer":
+  elif current_user.role== "Developer":
     # tickets assigned to developer
-    mytickets = Ticket.query.filter(assigned_dev= current_user.email)
+    mytickets = Ticket.query.filter_by(assigned_dev= current_user.email).all()
     return(render_template("tickets.html", tickets=mytickets))
   else:
     abort(404)
