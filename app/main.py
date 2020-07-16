@@ -224,8 +224,15 @@ def projects():
 def p_search():
   keyword = request.form.get('search').title()
   results = Project.query.filter_by(project_name=keyword).all()
+  user_project = Project.query.filter(
+      Project.team.any(id=current_user.id)).all()
+
   if results:
-    return(render_template("projects.html", projects = results))
+    if current_user.role == "Admin":
+      return(render_template("projects.html", projects = results))
+    elif current_user.role == "Project Manager" or current_user.role == "Developer":
+      results = user_project.query.filter_by(project_name=keyword).all()
+      return(render_template("projects.html", projects=results))
   else:
     flash("Project not found")
     return(redirect(url_for("main.projects")))
@@ -287,14 +294,9 @@ def mytickets():
   if current_user.role == "Admin":
     return(render_template("tickets.html", tickets=tickets))
   
-  elif current_user.role =="Project manager":
-    #project manager restricted to only theirs
-    mytickets=Ticket.query.filter_by(Ticket.user_ticket.has(email=current_user.email)).all()
-    return(render_template("tickets.html", tickets=mytickets))
-    
-  elif current_user.role== "Developer":
-    # tickets assigned to developer
-    mytickets = Ticket.query.filter_by(assigned_dev= current_user.email).all()
+  elif current_user.role == "Project Manager" or current_user.role == "Developer":
+    # restricted to only theirs
+    mytickets = mytickets = Ticket.query.filter_by(assigned_dev=current_user.email).all()
     return(render_template("tickets.html", tickets=mytickets))
   else:
     abort(404)
