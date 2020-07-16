@@ -224,14 +224,17 @@ def projects():
 def p_search():
   keyword = request.form.get('search').title()
   results = Project.query.filter_by(project_name=keyword).all()
-  user_project = Project.query.filter(
+  user_projects = Project.query.filter(
       Project.team.any(id=current_user.id)).all()
 
   if results:
     if current_user.role == "Admin":
       return(render_template("projects.html", projects = results))
     elif current_user.role == "Project Manager" or current_user.role == "Developer":
-      results = user_project.query.filter_by(project_name=keyword).all()
+      results=[]
+      for user_project in user_projects:
+        if user_project.project_name == keyword:
+          results.append(user_project)
       return(render_template("projects.html", projects=results))
   else:
     flash("Project not found")
