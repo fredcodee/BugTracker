@@ -230,11 +230,13 @@ def p_search():
   if results:
     if current_user.role == "Admin":
       return(render_template("projects.html", projects = results))
-    elif current_user.role == "Project Manager" or current_user.role == "Developer":
+    elif current_user.role != "Admin":
       results=[]
       for user_project in user_projects:
         if user_project.project_name == keyword:
           results.append(user_project)
+      if len(results) == 0:
+        return(False)
       return(render_template("projects.html", projects=results))
   else:
     flash("Project not found")

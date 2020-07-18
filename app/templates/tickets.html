@@ -6,7 +6,7 @@
   <title>My Tickets</title>
 </head>
 <body>
-  {% if current_user.role == "Admin" or current_user.role == "Project Manager"%}
+  {% if current_user.role != "Developer" %}
     <div>
       <a href="{{url_for('main.createticket')}}"><button>CREATE NEW TICKET</button></a>
     </div>

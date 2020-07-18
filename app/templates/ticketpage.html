@@ -15,7 +15,7 @@
     </div>
     {% endif%}
     {% endwith %}
-    {% if current_user.role == "Admin" or current_user == "Project Manager" %}
+    {% if current_user.role != "Developer" %}
     <div>
       <a href="/tickets/edit/{{ticket.id}}">Edit Ticket</a>
     </div>
