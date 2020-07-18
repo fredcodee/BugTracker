@@ -28,7 +28,9 @@
     <div>
       <h3>project name: {{project.project_name}}</h3>
       <p>decsripion: {{project.description}}</p>
+      {% if current_user.role == "Admin"%}
       <a href="{{ url_for('main.edit_project', idd=project.id) }}">edit</a>
+      {%endif%}
       <a href="/details/{{project.id}}">details</a>
     </div>
   {%endfor%}

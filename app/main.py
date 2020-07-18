@@ -4,7 +4,7 @@ from app.forms import Comments
 from app import db, photos
 from flask_login import login_required , current_user
 import random
-from sqlalchemy import or_
+from sqlalchemy import or_ , and_
 
 main = Blueprint('main', __name__)
 
@@ -240,7 +240,7 @@ def p_search():
     flash("Project not found")
     return(redirect(url_for("main.projects")))
 
-#edit project
+#edit project (Admin)
 @main.route("/editproject/<idd>", methods=['POST', 'GET'])
 @login_required
 def edit_project(idd):
@@ -304,14 +304,17 @@ def mytickets():
   else:
     abort(404)
 
-#create tickets
+#create tickets(Admin & ProjectManager)
 @main.route("/mytickets/projects")
 @login_required
 def createticket():
-  projects = Project.query.all()
-  return(render_template("createticketsub.html", projects = projects))
+  if current_user.role == "Admin" or current_user.role == "Project Manager":
+    projects = Project.query.all()
+    return(render_template("createticketsub.html", projects = projects))
+  else:
+    abort(404)
 
-#ticket form
+#ticket form(Admin & ProjectManager)
 @main.route("/tickets/create/<idd>", methods = ["POST", "GET"])
 @login_required
 def createticket_form(idd):
@@ -368,13 +371,22 @@ def tickets_search():
 
   if search:
     try:
-      search = Ticket.query.filter_by(ref_num = int(search)).all()
+      if current_user.role == "Admin":
+        search = Ticket.query.filter_by(ref_num = int(search)).all()
+      elif current_user.role == "Developer" or current_user.role =="Project Manager":
+        search = Ticket.query.filter(and_(Ticket.ref_num == int(search), Ticket.assigned_dev == current_user.email)).all()
       return(render_template("tickets.html", tickets=search))
     except:
-      search = Ticket.query.filter_by(title=search).all()
+      if current_user.role == "Admin":
+        search = Ticket.query.filter_by(title=search).all()
+      elif current_user.role == "Developer" or current_user.role == "Project Manager":
+        search = Ticket.query.filter(and_(Ticket.title == search, Ticket.assigned_dev == current_user.email)).all()
       return(render_template("tickets.html", tickets=search))
   elif status:
-    search = Ticket.query.filter_by(status=status).all()
+    if current_user.role != "Admin":
+      search = Ticket.query.filter(and_(Ticket.status == status, Ticket.assigned_dev == current_user.email)).all()
+    else:
+      search = Ticket.query.filter_by(status=status).all()
     return(render_template("tickets.html", tickets=search))
   else:
     flash("ticket not found")

@@ -6,9 +6,11 @@
   <title>My Tickets</title>
 </head>
 <body>
-  <div>
-    <a href="{{url_for('main.createticket')}}"><button>CREATE NEW TICKET</button></a>
-  </div>
+  {% if current_user.role == "Admin" or current_user.role == "Project Manager"%}
+    <div>
+      <a href="{{url_for('main.createticket')}}"><button>CREATE NEW TICKET</button></a>
+    </div>
+  {%endif%}
   <div class="filter">
     <form action="/tickets/search" method="POST">
       <div>
