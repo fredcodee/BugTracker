@@ -202,8 +202,10 @@ def createproject():
       project = Project(project_name=project_name, description= project_description)
       db.session.add(project)
       db.session.commit()
+
+      get_project = Project.query.filter_by(project_name=project_name).first()
       flash('project created')
-      return(redirect(url_for('main.createproject')))
+      return(redirect(url_for('main.AddToProject', idd=get_project.id)))
 
     return(render_template('createproject.html'))
   else:
@@ -279,6 +281,15 @@ def project_tickets(idd):
   mytickets = Ticket.query.filter(Ticket.project_ticket.has(id=int(idd)))
   return(render_template("tickets.html", tickets=mytickets))
 
+#delete project
+@main.route("/projects/delete/<idd>")
+@login_required
+def delete_project(idd):
+  get_project = Project.query.get(int(idd))
+  db.session.delete(get_project)
+  db.session.commit()
+  flash("project deleted")
+  return(redirect(url_for("main.projects")))
 
 
 #TICKETS
