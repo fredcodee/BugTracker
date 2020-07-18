@@ -397,7 +397,11 @@ def tickets_search():
 @login_required
 def tickets_priority():
   priority = request.form.get("priority")
-  search = Ticket.query.filter_by(priority=priority).all()
+
+  if current_user.role != "Admin":
+    search = Ticket.query.filter(and_(Ticket.priority == priority, Ticket.assigned_dev == current_user.email)).all()
+  else:
+    search = Ticket.query.filter_by(priority=priority).all()
   return(render_template("tickets.html", tickets=search))
 
 #view ticket page
