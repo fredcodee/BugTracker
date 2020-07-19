@@ -277,7 +277,6 @@ def project_details(idd):
 @main.route("/details/tickets/<idd>")
 @login_required
 def project_tickets(idd):
-  project = Project.query.get(int(idd))
   mytickets = Ticket.query.filter(Ticket.project_ticket.has(id=int(idd)))
   return(render_template("tickets.html", tickets=mytickets))
 
@@ -286,6 +285,7 @@ def project_tickets(idd):
 @login_required
 def delete_project(idd):
   get_project = Project.query.get(int(idd))
+  #mytickets = Ticket.query.filter(Ticket.project_ticket.has( id=int(idd))).delete(synchronize_session='fetch')
   db.session.delete(get_project)
   db.session.commit()
   flash("project deleted")
@@ -370,7 +370,7 @@ def createticket_form(idd):
         flash("Assigned developer not found")
         return(redirect(url_for("main.createticket_form", idd = idd)))
 
-    users = User.query.filter(or_(User.role == "Developer", User.role == "Project Manager")).all()
+    users =project.team
     return(render_template("createticket.html", project= project, users=users))
   else:
     abort(404)

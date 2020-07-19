@@ -30,9 +30,10 @@
       <p>decsripion: {{project.description}}</p>
       {% if current_user.role == "Admin"%}
       <a href="{{ url_for('main.edit_project', idd=project.id) }}">edit</a>
+      <a href="/projects/delete/{{project.id}}">delete</a>
       {%endif%}
       <a href="/details/{{project.id}}">details</a>
-      <a href="/projects/delete/{{project.id}}">delete</a>
+      
     </div>
   {%endfor%}
 </body>
