@@ -53,23 +53,48 @@
   {% endif%}
   {% endwith %}
   <div>
-    {%for ticket in tickets %}
-    <a href="/tickets/view/{{ticket.id}}">
-      <div>
-        <h3>title: {{ticket.title}}</h3>
-        <p>description: {{ticket.description}}</p>
-        <p>submitter: {{ticket.user_ticket.name}}</p>
-        <p>project name: {{ticket.project_ticket.project_name}}</p>
-        <p>assigned to: {{ticket.assigned_dev}}</p>
-        <p>status: {{ticket.status}}</p>
-        <p>priority: {{ticket.priority}}</p>
-        <p>ticket type: {{ticket.ticket_type}}</p>
-        <p>ref number: {{ticket.ref_num}}</p>
-        <p>created on: {{ticket.date}}</p>
-      </div>
-    </a>
-    <hr>
-    {% endfor%}
+    {% if current_user.role != "Developer"%}
+    <div>
+      <h1>Assigned Tickets</h1>
+      {%for t in mytickets%}
+      <a href="/tickets/view/{{t.id}}">
+        <div>
+          <h3>title: {{t.title}}</h3>
+          <p>description: {{t.description}}</p>
+          <p>submitter: {{t.user_ticket.name}}</p>
+          <p>project name: {{t.project_ticket.project_name}}</p>
+          <p>assigned to: {{t.assigned_dev}}</p>
+          <p>status: {{t.status}}</p>
+          <p>priority: {{t.priority}}</p>
+          <p>ticket type: {{t.ticket_type}}</p>
+          <p>ref number: {{t.ref_num}}</p>
+          <p>created on: {{t.date}}</p>
+        </div>
+      </a>
+      {%endfor%}
+    </div>
+    {%endif%}
+    <div>
+      <h1> Your Tickets</h1>
+      {%for ticket in tickets %}
+      <a href="/tickets/view/{{ticket.id}}">
+        <div>
+          <h3>title: {{ticket.title}}</h3>
+          <p>description: {{ticket.description}}</p>
+          <p>submitter: {{ticket.user_ticket.name}}</p>
+          <p>project name: {{ticket.project_ticket.project_name}}</p>
+          <p>assigned to: {{ticket.assigned_dev}}</p>
+          <p>status: {{ticket.status}}</p>
+          <p>priority: {{ticket.priority}}</p>
+          <p>ticket type: {{ticket.ticket_type}}</p>
+          <p>ref number: {{ticket.ref_num}}</p>
+          <p>created on: {{ticket.date}}</p>
+        </div>
+      </a>
+      <hr>
+      {% endfor%}
+    </div>
+    
   </div>
 </body>
 </html>

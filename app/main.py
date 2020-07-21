@@ -304,14 +304,15 @@ def add_log(name,get_ticket,log):
 @main.route("/mytickets")
 @login_required
 def mytickets():
-  tickets = Ticket.query.all()
-  #admin sees all tickets
-  if current_user.role == "Admin":
-    return(render_template("tickets.html", tickets=tickets))
+  #admin and pm sees all tickets
+  if current_user.role == "Admin" or current_user.role == "Project Manager":
+    get_mytickets = Ticket.query.filter(Ticket.user_ticket.has(id=current_user.id))
+    get_myassigned_tickets = Ticket.query.all()
+    return(render_template("tickets.html",mytickets=get_mytickets, tickets=get_myassigned_tickets))
   
-  elif current_user.role == "Project Manager" or current_user.role == "Developer":
+  elif current_user.role == "Developer":
     # restricted to only theirs
-    mytickets = mytickets = Ticket.query.filter_by(assigned_dev=current_user.email).all()
+    mytickets = Ticket.query.filter_by(assigned_dev=current_user.email).all()
     return(render_template("tickets.html", tickets=mytickets))
   else:
     abort(404)
