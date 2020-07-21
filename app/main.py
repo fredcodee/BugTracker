@@ -238,7 +238,8 @@ def p_search():
         if user_project.project_name == keyword:
           results.append(user_project)
       if len(results) == 0:
-        return(False)
+        flash("Project not found")
+        return(redirect(url_for("main.projects")))
       return(render_template("projects.html", projects=results))
   else:
     flash("Project not found")

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import InputRequired, Email, Length
@@ -20,7 +20,7 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
   email = StringField('Email',validators=[Length(min=6),Email(message='Enter a valid email.'),InputRequired()])
-  name = StringField('Full name', validators=[InputRequired(), Length(min=4, max=15)])
+  name = StringField('Full name', validators=[InputRequired(), Length(min=4)])
   password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=80)])
   role = SelectField('role', choices=[(
       'Admin', 'Admin'), ('Project Manager', 'Project Manager'), ('Developer', 'Developer')], validators=[InputRequired()])
@@ -47,6 +47,32 @@ def login():
       return(redirect(url_for('forms.login')))
 
   return(render_template("login.html", form=form))
+#demo login
+@forms.route("/demologin", methods=["GET","POST"])
+def demo_login():
+  if request.method == "POST":
+    try:
+      account =request.form.get("demo")
+      if account:
+        if account == "A":
+          user = User.query.filter_by(name="Demo Admin").first()
+          login_user(user)
+        if account == "PM":
+          user = User.query.filter_by(name="Demo Project Manager").first()
+          login_user(user)
+        if account == "D":
+          user = User.query.filter_by(name="Demo Developer").first()
+          login_user(user)
+      return(redirect(url_for('main.home'))) 
+    except:
+      flash('please choose an account')
+      return(redirect(url_for('forms.login')))
+  return(render_template("demologin.html"))
+
+
+
+
+
 
 #signup
 @forms.route('/signup', methods=['GET', 'POST'])
