@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>admin</title>
+</head>
+<body>
+  {% for item in items%}
+  <p>{{item.title}}</p>
+    {%for t in item.Comment %}
+      <p>{{t.details}}</p>
+    {%endfor%}
+    {%for t in item.Ticket_histroy %}
+    <p>{{t.details}}</p>
+    {%endfor%}
+
+  {%endfor%}
+</body>
+</html>

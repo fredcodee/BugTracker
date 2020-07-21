@@ -285,7 +285,6 @@ def project_tickets(idd):
 @login_required
 def delete_project(idd):
   get_project = Project.query.get(int(idd))
-  #mytickets = Ticket.query.filter(Ticket.project_ticket.has( id=int(idd))).delete(synchronize_session='fetch')
   db.session.delete(get_project)
   db.session.commit()
   flash("project deleted")
@@ -527,16 +526,13 @@ def delete_ticket(idd):
 
  
 
-'''
-@main.route("/admin/delete")
+'''@main.route("/admin_/<idd>")
 @login_required
-def admin_delete():
+def admin_(idd):
   try:
-    get_comment = Comment.query.delete()
-    get_images = Ticket_image.query.delete()
-    db.session.commit()
-    flash("deleted")
-    return(redirect(url_for("main.mytickets")))
+    items = Ticket.query.filter(Ticket.project_ticket.has(id=int(idd))).join(Ticket_history, Ticket_history.ticket_history.id == int(idd))
+
+    return(render_template("admin.html", items = items))
   except:
     flash("code not working!")
     return(redirect(url_for("main.mytickets")))'''

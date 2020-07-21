@@ -20,7 +20,7 @@ class Project(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   project_name = db.Column(db.String(120), nullable=False)
   description = db.Column(db.String(200))
-  Project_tickets = db.relationship('Ticket', backref='project_ticket', lazy='dynamic')
+  Project_tickets = db.relationship('Ticket', backref='project_ticket', cascade="all,delete", lazy='dynamic')
 
 
 class Ticket(db.Model):
@@ -35,9 +35,9 @@ class Ticket(db.Model):
   ticket_type = db.Column(db.String(50), nullable=False)
   ref_num = db.Column(db.Integer, nullable=False)
   date = db.Column(db.DateTime, default=datetime.utcnow)
-  comments = db.relationship('Comment', backref='ticket_comments', lazy='dynamic')
+  comments = db.relationship('Comment', backref='ticket_comments', cascade="all,delete", lazy='dynamic')
   assigned_dev = db.Column(db.String(120))#email
-  history = db.relationship('Ticket_history', backref='ticket_history', lazy='dynamic')
+  history = db.relationship('Ticket_history', backref='ticket_history', cascade="all,delete", lazy='dynamic')
 
 
 class Comment(db.Model):
