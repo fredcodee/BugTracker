@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, flash, url_for, abort
-from app.models import User, Project, Ticket, Comment, Ticket_history
+from app.models import User, Project, Ticket, Comment, Ticket_history, Notification
 from app.forms import Comments
 from app import db, photos
 from flask_login import login_required , current_user
@@ -16,7 +16,17 @@ def index():
 @main.route("/home")
 @login_required
 def home():
-  return(render_template("home.html"))
+  get_notifications = Notification.query.filter_by(assigned_dev=current_user.name).all()
+  return(render_template("home.html", notifications =get_notifications))
+
+
+#NOTIFICATIONS
+def add_notification(details,a_dev,link):
+  #add notification
+  log=Notification(details=details,link = link, assigned_dev = a_dev,notify = current_user)
+  db.session.add(log)
+  db.session.commit()
+
 
 #user profile
 @main.route("/<user>")
@@ -164,6 +174,10 @@ def adduser(idd):
       get_user = User.query.get(int(user))
       get_project.team.append(get_user)
       db.session.commit()
+      details= "%s added you to a project " %(current_user.name)
+      a_dev = get_user.name
+      link = "/AddToProject/%s"%(idd)
+      add_notification(details, a_dev, link)
 
   flash("changes saved")
   return(redirect(url_for("main.AddToProject", idd = idd)))
@@ -180,6 +194,10 @@ def remove(idd):
         get_user = User.query.get(int(user))
         get_project.team.remove(get_user)
         db.session.commit()
+        details = "%s removed you from a project " % (current_user.name)
+        a_dev = get_user.name
+        link = "/home"
+        add_notification(details, a_dev, link)
         flash("changes saved")
         return(redirect(url_for("main.remove", idd = idd)))
 
@@ -365,6 +383,13 @@ def createticket_form(idd):
         log = "created this ticket"
         add_log(current_user.name, get_ticket, log)
 
+        #add notifictaion
+        details = "%s created a ticket and assigned to %s " % (
+            current_user.name, check_assigned_dev.name)
+        a_dev = check_assigned_dev.name
+        link = "/mytickets"
+        add_notification(details, a_dev, link)
+
         flash("Ticket Created")
         return(redirect(url_for("main.mytickets")))
       else:
@@ -439,6 +464,20 @@ def view_ticket(idd):
       #addlog to ticket history
       log= "commented on this ticket"
       add_log(current_user.name, ticket, log)
+
+      #add notifictaion
+      if current_user.role != "Developer":
+        details = "%s commented on a ticket " % (current_user.name)
+        a_de = User.query.filter_by(email=ticket.assigned_dev).first()
+        a_dev = a_de.name
+        link = "/tickets/view/%s"%(idd)
+        add_notification(details, a_dev, link)
+      else:
+        details = "%s commented on a ticket " % (current_user.name)
+        a_dev = ticket.user_ticket.name
+        link = "/tickets/view/%s" % (idd)
+        add_notification(details, a_dev, link)
+  
       flash("comment added")
       return(redirect(url_for("main.view_ticket", idd=idd)))
     except:
@@ -459,7 +498,7 @@ def delete_comment(idd, c_id):
   db.session.delete(get_comment)
   db.session.commit()
 
-  #add log to TH
+  #add log to ticket history
   get_ticket = Ticket.query.get(int(idd))
   log = "deleted a comment"
   add_log(current_user.name,get_ticket,log)
@@ -500,14 +539,20 @@ def edit_ticket(idd):
       log="Edited this ticket"
       add_log(current_user.name, get_ticket,log)
       db.session.commit()
+
+      #add to notification
+      details = "%s Edited this ticket " % (current_user.name)
+      a_de = User.query.filter_by(email=get_ticket.assigned_dev).first()
+      a_dev = a_de.name 
+      link = "/tickets/view/%s" % (idd)
+      add_notification(details, a_dev, link)
+      
       flash('changes saved')
       return(redirect(url_for("main.view_ticket", idd=idd)))
 
     users = User.query.filter( or_(User.role == "Developer", User.role == "Project Manager")).all()
     return(render_template("editticket.html", ticket=get_ticket, users=users))
       
-
-  #developer only status request(feature)
 
 #delete tickets
 @main.route("/tickets/delete/<idd>")

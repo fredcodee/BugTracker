@@ -1,8 +1,7 @@
 from flask_login import UserMixin
 from datetime import datetime
 from app import db
-import json
-from time import time
+
 
 assign = db.Table('assign', db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),db.Column('project_id', db.Integer, db.ForeignKey('project.id'), primary_key=True))
 
@@ -62,6 +61,7 @@ class Notification(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   details = db.Column(db.String(128), index=True)
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-  timestamp = db.Column(db.Float, index=True, default=time)
+  date = db.Column(db.DateTime, default=datetime.utcnow)
   assigned_dev = db.Column(db.String(120))  #name
+  link = db.Column(db.String(128))
   

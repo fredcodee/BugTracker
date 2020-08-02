@@ -12,7 +12,14 @@
     <h1>welcome {{current_user.name}}</h1>
     <ul>
       <li>search</li>
-      <li>notifications</li>
+      <div>
+        <h4>notifications</h4>
+        <ul>
+        {% for notify in notifications%}
+          <a href="{{notify.link}}"><li>{{ notify.details }}, {{notify.date}}</li></a>
+        {% endfor %}
+        </ul>
+      </div>
       <a href="/logout"><li>logout</li></a>
     </ul>
   </div>
