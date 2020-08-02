@@ -525,7 +525,7 @@ def delete_ticket(idd):
 
 
 
-
+ 
  
 
 '''@main.route("/admin_/<idd>")

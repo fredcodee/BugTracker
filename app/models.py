@@ -1,6 +1,8 @@
 from flask_login import UserMixin
 from datetime import datetime
 from app import db
+import json
+from time import time
 
 assign = db.Table('assign', db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),db.Column('project_id', db.Integer, db.ForeignKey('project.id'), primary_key=True))
 
@@ -14,6 +16,7 @@ class User(UserMixin, db.Model):
   projects = db.relationship("Project", secondary=assign, backref='team')
   tickets = db.relationship('Ticket', backref='user_ticket', lazy='dynamic')
   ticket_comment =db.relationship('Comment', backref='user_comment', lazy='dynamic')
+  notifications = db.relationship('Notification', backref='notify',lazy='dynamic')
 
 class Project(db.Model):
   __tablename__ = 'project'
@@ -55,3 +58,10 @@ class Ticket_history(db.Model):
   date = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class Notification(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  details = db.Column(db.String(128), index=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+  timestamp = db.Column(db.Float, index=True, default=time)
+  assigned_dev = db.Column(db.String(120))  #name
+  
