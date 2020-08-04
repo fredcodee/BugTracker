@@ -14,11 +14,16 @@
       <li>search</li>
       <div>
         <h4>notifications</h4>
-        <ul>
-        {% for notify in notifications%}
-          <a href="{{notify.link}}"><li>{{ notify.details }}, {{notify.date}}</li></a>
-        {% endfor %}
-        </ul>
+        {% if notifications |length > 0 %}
+          <ul>
+          {% for notify in notifications%}
+            <a href="{{notify.link}}"><li>{{ notify.details }}, {{notify.date}}</li></a>
+          {% endfor %}
+          </ul>
+        {% else %}
+           <ul>
+             <li>None</li>
+           </ul>
       </div>
       <a href="/logout"><li>logout</li></a>
     </ul>
