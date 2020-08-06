@@ -6,15 +6,16 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
-		<script src="js/jquery.min.js"></script>
-		<script src="js/skel.min.js"></script>
-		<script src="js/skel-layers.min.js"></script>
-		<script src="js/init.js"></script>
-		<noscript>
-			<link rel="stylesheet" href="css/skel.css" />
-			<link rel="stylesheet" href="css/style.css" />
-			<link rel="stylesheet" href="css/style-xlarge.css" />
-		</noscript>
+		<script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
+		<script src="{{url_for('static', filename='js/skel.min.js')}}"></script>
+		<script src="{{url_for('static', filename='js/skel-layers.min.js')}}"></script>
+		<script src="{{url_for('static', filename='js/init.js')}}"></script>
+		<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/mystyle.css')}}">
+		<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/skel.css')}}">
+		<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
+		<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style-xlarge.css')}}">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+			integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 	</head>
 	<body>
 
@@ -23,25 +24,88 @@
 				<h1><a href="/">BugTrackerr</a></h1>
 				<nav id="nav">
 					<ul>
-						<li><a href="/home">Home</a></li>
-						<li><a href="generic.html" class="button special">Demo</a></li>
-						<li><a href="login.html" class="button special">Log in</a></li>
+						<li><a href="{{url_for('main.index')}}">Home</a></li>
+						<li><a href="/demologin" class="button special">Demo</a></li>
+						<li><a href="/login" class="button special">Log in</a></li>
 					</ul>
 				</nav>
 			</header>
 
 		<!-- Main -->
 			<section id="main" class="wrapper">
+				{% block content %}
 				<div class="container">
+					{% for message in get_flashed_messages() %}
+					<div class="alert alert-warning">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						{{ message }}
+					</div>
+					{% endfor %}
 
 					<header class="major">
 						<h2>Sign up</h2>
 						<p>Get Started in less than 30 seconds</p>
 					</header>
+					<hr>
+					<div class="form">
+						<form method="POST" action="/signup">
+							{{ form.csrf_token }}
+						
+							<fieldset class="name">
+								{{ form.name.label }}
+								{{ form.name(placeholder='John Smith') }}
+								{% if form.name.errors %}
+								<ul class="errors">
+									{% for error in form.email.errors %}
+									<li>{{ error }}</li>{% endfor %}
+								</ul>
+								{% endif %}
+							</fieldset>
+						
+							<fieldset class="email">
+								{{ form.email.label }}
+								{{ form.email(placeholder='youremail@example.com') }}
+								{% if form.email.errors %}
+								<ul class="errors">
+									{% for error in form.email.errors %}
+									<li>{{ error }}</li>{% endfor %}
+								</ul>
+								{% endif %}
+							</fieldset>
+						
+							<fieldset class="password">
+								{{ form.password.label }}
+								{{ form.password }}
+								{% if form.password.errors %}
+								<ul class="errors">
+									{% for error in form.password.errors %}
+									<li>{{ error }}</li>{% endfor %}
+								</ul>
+								{% endif %}
+							</fieldset>
+						
+							<fieldset class="role">
+								{{ form.role.label }}
+								{{ form.role }}
+							</fieldset>
+						
+						
+							<div class="submit-button" style="text-align: center; padding-top: 2rem;">
+								{{ form.submit }}
+							</div>
+							<div class="login-signup" style="text-align: center;">
+								<span>Already have an account? <a href="{{ url_for('forms.login') }}">Log in.</a></span>
+							</div>
+						
+						</form>
+						
+					</div>
+
 
 					
 
 				</div>
+				{% endblock %}
 			</section>
 
 		<!-- Footer -->

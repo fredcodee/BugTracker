@@ -20,9 +20,9 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
   email = StringField('Email',validators=[Length(min=6),Email(message='Enter a valid email.'),InputRequired()])
-  name = StringField('Full name', validators=[InputRequired(), Length(min=4)])
-  password = PasswordField('password', validators=[InputRequired(), Length(min=4, max=80)])
-  role = SelectField('role', choices=[(
+  name = StringField('Full Name', validators=[InputRequired(), Length(min=4)])
+  password = PasswordField('Password', validators=[InputRequired(), Length(min=4, max=80)])
+  role = SelectField('Role', choices=[(
       'Admin', 'Admin'), ('Project Manager', 'Project Manager'), ('Developer', 'Developer')], validators=[InputRequired()])
   submit = SubmitField('Register')
 
