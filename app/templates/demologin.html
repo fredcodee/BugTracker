@@ -1,21 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Demo user</title>
-</head>
-<body>
+{% extends "signup.html" %}
+
+
+{% block title %}
+<title>Login</title>
+{% endblock %}
+
+{% block content%}
+<div class="container">
   <form action="/demologin" method="POST">
-    <label for="account">Choose demo account</label>
+    <label for="account">Choose  Role For Demo Account</label>
     <select name="demo" id="account">
       <option value="A">Admin</option>
       <option value="PM">Project Manager</option>
       <option value="D">Developer</option>
     </select>
-    <div>
+    <div style="text-align: center; padding-top: 2rem;">
       <input type="submit">
     </div>
   </form>
-</body>
-</html>
+</div>
+{% endblock %}
