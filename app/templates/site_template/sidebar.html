@@ -1,0 +1,69 @@
+
+        <!-- partial:partials/_sidebar.html -->
+        <aside class="mdc-drawer mdc-drawer--dismissible mdc-drawer--open">
+
+            <div class="mdc-drawer__header">
+              <a href="/" class="brand-logo">
+                <h3 style="color: white;">BugTrackerr</h3>
+              </a>
+            </div>
+            <div class="mdc-drawer__content">
+              <div class="user-info">
+                <p class="name">{{ current_user.role }}</p>
+                <p class="name">{{ current_user.name }}</p>
+                <p class="email">{{ current_user.email }}</p>
+              </div>
+              <div class="mdc-list-group">
+                <nav class="mdc-list mdc-drawer-menu">
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-drawer-link" href="/">
+                      <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">home</i>
+                      Dashboard
+                    </a>
+                  </div>
+                  {% if current_user.role == 'Admin'%}
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-drawer-link" href="{{url_for('main.mra')}}">
+                      <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">track_changes</i>
+                      Role Assignment
+                    </a>
+                  </div>
+                  {% endif %}
+                  {%if current_user.role == 'Admin' or current_user.role == 'Project manager' %}
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-drawer-link" href="/manageprojects">
+                      <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">grid_on</i>
+                      Manage Project Users
+                    </a>
+                  </div>
+                  {% endif %}
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-drawer-link" href="/projects">
+                      <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">grid_on</i>
+                      My Projects
+                    </a>
+                  </div>
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-drawer-link" href="/mytickets">
+                      <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">pie_chart_outlined</i>
+                      My Tickets
+                    </a>
+                  </div>
+                  <div class="mdc-list-item mdc-drawer-item">
+                    <a class="mdc-drawer-link" href="/{{current_user.name}}" target="_blank">
+                      <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">description</i>
+                      Your Profile
+                    </a>
+                  </div>
+                </nav>
+              </div>
+              <div class="profile-actions">
+                <a href=/logout>Logout</a>
+              </div>
+              
+            </div>
+        
+        </aside>
+ 
+
+          

@@ -17,7 +17,7 @@ def index():
 @login_required
 def home():
   get_notifications = Notification.query.filter_by(assigned_dev=current_user.name).all()
-  return(render_template("home.html", notifications =get_notifications))
+  return(render_template("dashboard.html", notifications =get_notifications))
 
 
 #NOTIFICATIONS
