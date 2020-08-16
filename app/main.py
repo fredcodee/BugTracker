@@ -16,6 +16,8 @@ def index():
 @main.route("/home")
 @login_required
 def home():
+
+  #dashboard properties
   get_notifications = Notification.query.filter_by(assigned_dev=current_user.name).all()
   if current_user.role == 'Admin':
     get_tickets = Ticket.query.all()
@@ -26,16 +28,19 @@ def home():
     ar = len(Ticket.query.filter_by(ticket_type='ACTION REQUIRED').all())
     bugs = len(Ticket.query.filter_by(ticket_type='BUG ERRORS').all())
     fdr = len(Ticket.query.filter_by(ticket_type='FILE/DOCUMENT REQUEST').all())
-    #fdr = len(fdr)
   else:
     get_tickets = Ticket.query.filter_by(assigned_dev=current_user.email).all()
     get_projects = Project.query.filter(Project.team.any(id=current_user.id)).all()
-    ot=""
-    ct=""
-    fr = ""
-    ar = ""
-    bugs = ""
-    fdr = ""
+    ot= len(Ticket.query.filter(and_(Ticket.assigned_dev == current_user.email, Ticket.status == 'OPEN' )).all())
+    ct=len(Ticket.query.filter(and_(Ticket.assigned_dev == current_user.email, Ticket.status == 'CLOSED' )).all())
+    fr = len(Ticket.query.filter(
+        and_(Ticket.assigned_dev == current_user.email, Ticket.ticket_type=='FEATURE REQUESTS')).all())
+    ar = len(Ticket.query.filter(
+        and_(Ticket.assigned_dev==current_user.email, Ticket.ticket_type=='ACTION REQUEST')).all())
+    bugs = len(Ticket.query.filter(
+        and_(Ticket.assigned_dev==current_user.email, Ticket.ticket_type=='BUG ERRORS')).all())
+    fdr = len(Ticket.query.filter(
+        and_(Ticket.assigned_dev==current_user.email, Ticket.ticket_type=='FILE/DOCUMENT REQUEST')).all())
 
   return(render_template("dashboard.html", notifications =get_notifications, get_tickets=len(get_tickets), get_projects = len(get_projects), ot = ot, ct = ct, fr =fr, ar=ar,bugs = bugs,fdr =fdr))
 
