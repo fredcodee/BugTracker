@@ -1,58 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage role</title>
-</head>
-<body>
-  <h1>users in the database</h1>
-    {% with messages = get_flashed_messages() %}
-    {% if messages%}
-    <div class="alert alert-danger" role="alert">
-      {{ messages[0] }}
-    </div>
-    {% endif%}
-    {% endwith %}
-    <!-- pagination and search feature-->
-    <div>
-      <div>
-        <form action="/managerole/show" method="POST">
-          <label for="pagenum">show</label>
-          <input type="number" min="1" max="{{pn}}" name="pagenum" id="pagenum" placeholder="{{pn}}">
-          <input type="submit">
-        </form>
-      </div>
-      <br>
-      <div>
-        <form action="/managerole/search" method="POST">
-          <input type="text" name="search" placeholder="name, email or role">
-        </form>
-      </div>
+{% extends "base-site.html" %}
 
-    </div>
-    
+{% block title %} Manage role {% endblock %} 
 
-    <div>
-      <hr>
-      {% for user in users %}
-          <div class="form-popup" id="myForm">
-            <form action="/assign/{{user.id}}" class="form-container" method="POST">
-              <p>{{user.name}} - {{user.email}} - {{user.role}}</p>
-              <select name="selection">
-                <option value="SL">Select Role</option>
-                <option value="Admin">Admin</option>
-                <option value="Project manager">Project manager</option>
-                <option value="Developer">Developer</option>
-              </select>
-              <button class="btn btn-dark">Change</button>
-            </form>
-            <div>
-              <a href="/manageusers/delete/{{user.id}}"><button>delete</button></a>
+<!-- Specific Page CSS goes HERE  -->  
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="mdc-layout-grid">
+      {% with messages = get_flashed_messages() %}
+      {% if messages%}
+      <div class="alert alert-danger" role="alert">
+        {{ messages[0] }}
+      </div>
+      {% endif%}
+      {% endwith %}
+        <div class="mdc-layout-grid__inner">
+          <div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+            <div class="mdc-card p-0">
+              <h6 class="card-title card-padding pb-0">Users in the database</h6>
+              <!-- pagination and search feature-->
+              <div style="padding-left: 2rem;">
+                <div style="padding-right: 2rem; float: right;">
+                  <form action="/managerole/show" method="POST">
+                    <label for="pagenum">show</label>
+                    <input type="number" min="1" max="{{pn}}" name="pagenum" id="pagenum" placeholder="{{pn}}">
+                    <input type="submit">
+                  </form>
+                </div>
+                <br>
+                <div>
+                  <form action="/managerole/search" method="POST">
+                    <input type="text" name="search" placeholder=" search name, email or role">
+                  </form>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="text-left">Name</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Change role</th>
+                      <th>Remove user</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for user in users %}
+                    <tr>
+                      <td class="text-left">{{user.name}}</td>
+                      <td>{{user.email}}</td>
+                      <td>{{user.role}}</td>
+                      <td id="myForm">
+                        <form action="/assign/{{user.id}}" class="form-container" method="POST">
+                          <select name="selection">
+                            <option value="SL">Select Role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Project manager">Project manager</option>
+                            <option value="Developer">Developer</option>
+                          </select>
+                          <button class="btn btn-dark">Change</button>
+                        </form>
+                      </td>
+                      <td>
+                        <a href="/manageusers/delete/{{user.id}}"><button>delete user</button></a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-          <hr>
-      {% endfor %}
+        </div>
     </div>
-</body>
-</html>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
