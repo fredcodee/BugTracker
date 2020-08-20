@@ -6,6 +6,9 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+    <div>
+      <h2>Manage Project Users</h2>
+    </div>
     {% with messages = get_flashed_messages() %}
     {% if messages%}
     <div class="alert alert-danger" role="alert">
@@ -13,9 +16,6 @@
     </div>
     {% endif%}
     {% endwith %}
-    <div>
-      <h2>Manage Project Users</h2>
-    </div>
     
     {% for project in projects%}
     <div class="mdc-layout-grid">

@@ -1,36 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base-site.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>remove users</title>
-</head>
+{% block title %} Forms{% endblock %}
 
-<body>
-  <h1>REMOVE USERS FROM THIS PROJECT</h1>
-  {% with messages = get_flashed_messages() %}
-  {% if messages%}
-  <div class="alert alert-danger" role="alert">
-    {{ messages[0] }}
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <section>
+    <a href="/home">Dashboard</a>
+    <-- <a href="/manageprojects">projects</a>
+  </section>
+
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-card">
+          <h6 style="text-align: center;">Remove Users From this Project</h6>
+          {% with messages = get_flashed_messages() %}
+          {% if messages%}
+          <div class="alert alert-danger" role="alert">
+            {{ messages[0] }}
+          </div>
+          {% endif%}
+          {% endwith %}
+          <div>
+            <h6>{{project.project_name}}</h6>
+            <p>Description: {{project.description}}</p>
+          </div>
+            <div style="text-align: center;">
+              <h3>Assigned Users in this project</h3>
+              <form action="/remove/{{project.id}}" method="POST">
+                {% for assigned_user in assigned%}
+                {{assigned_user.name}} {{assigned_user.role}}<input type="checkbox" value="{{assigned_user.id}}" name="user"> <br>
+                {% endfor%}
+                <input type="submit">
+              </form>
+            
+            </div>
+        </div>
+      </div>
+    </div>
   </div>
-  {% endif%}
-  {% endwith %}
-  <div>
-    <h1>name: {{project.project_name}}</h1>
-    <p>description: {{project.description}}</p>
-  </div>
-  <div>
-    <h3>Assigned Users in this project</h3>
-    <form action="/remove/{{project.id}}" method="POST">
-      {% for assigned_user in assigned%}
-        {{assigned_user.name}} {{assigned_user.role}}<input type="checkbox" value="{{assigned_user.id}}" name="user"> <br>
-      {% endfor%}
-      <input type="submit">
-    </form>
+
+
+
+{% endblock content %}
     
-  </div>
-  </div>
-</body>
-
-</html>
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

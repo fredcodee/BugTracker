@@ -1,19 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>search results</title>
-</head>
-<body>
-  <h3>add to {{project.project_name}}</h3>
-   <form action="/adduser/{{project.id}}" method="POST">
-    {%for user in users%}
-      {{user.name}} {{user.role}} {{user.email}}<input type="checkbox" value="{{user.id}}" name="user"> <br>
-    {%endfor%}
-    <input type="submit">
-   </form>
+{% extends "base-site.html" %}
+
+{% block title %} Forms{% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <section>
+    <a href="/home">Dashboard</a>
+    <- <a href="/manageprojects">projects</a>
+  </section>
+
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-card">
+          <h6>Add user to {{project.project_name}}</h1>
+            <div>
+              <form action="/adduser/{{project.id}}" method="POST">
+                {%for user in users%}
+                {{user.name}} {{user.role}} {{user.email}}<input type="checkbox" value="{{user.id}}" name="user"> <br>
+
+                {%endfor%}
+                <input type="submit">
+              </form>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
    
-  
-</body>
-</html>
+   
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

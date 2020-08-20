@@ -1,13 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base-site.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>assign users to project</title>
-</head>
-<body>
-  <h1>ASSIGN USERS TO THIS PROJECT</h1>
+{% block title %} Forms{% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <section> 
+    <a href="/home">Dashboard</a> <-
+    <a href="/manageprojects">projects</a>
+  </section>
+  <div>
+    <h2> Assign Users To This Project</h2>
+  </div>
+
   {% with messages = get_flashed_messages() %}
   {% if messages%}
   <div class="alert alert-danger" role="alert">
@@ -15,23 +21,35 @@
   </div>
   {% endif%}
   {% endwith %}
-  <div>
-    <h1>name: {{project.project_name}}</h1>
-    <p>description: {{project.description}}</p>
-  </div>
-  <div>
-    <h3>Assigned Users in this project</h3>
-      {% for assigned_user in assigned%}
-        <p>{{assigned_user.name}} - {{assigned_user.role}}</p>
-      {% endfor%}
-  </div>
-  <div>
-    <h1>Assign users</h1>
-    <div>
-      <form action="/AddToProject/{{project.id}}/search" method="POST">
-        <input type="text" name="search" placeholder="name, email or role">
-      </form>
+
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-card">
+          <h6>{{project.project_name}}</h6>
+          <p>description: {{project.description}}</p>
+          <div>
+            <h6>Assigned Users in this project</h3>
+            {% for assigned_user in assigned%}
+            <img src="/static/assets/images/faces/face1.gif" alt="user" class="user" style="width: 3%;">
+            <p>{{assigned_user.name}} - {{assigned_user.role}}</p>
+            {% endfor%}
+          </div>
+          <div>
+            <h1>Assign users</h1>
+            <div>
+              <form action="/AddToProject/{{project.id}}/search" method="POST">
+                <input type="text" name="search" placeholder=" search by name, email or role" style="width: 15rem;">
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</body>
-</html>
+  
+  
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
