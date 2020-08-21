@@ -350,7 +350,7 @@ def add_log(name,get_ticket,log):
 def mytickets():
   #admin and pm sees all tickets
   if current_user.role == "Admin" or current_user.role == "Project Manager":
-    get_mytickets = Ticket.query.filter(Ticket.user_ticket.has(id=current_user.id))
+    get_mytickets = Ticket.query.filter(Ticket.user_ticket.has(id=current_user.id)).all()
     get_myassigned_tickets = Ticket.query.all()
     return(render_template("tickets.html",mytickets=get_mytickets, tickets=get_myassigned_tickets))
   
