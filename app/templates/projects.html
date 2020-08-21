@@ -1,17 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>projects</title>
-</head>
-<body>
+{% extends "base-site.html" %}
+
+{% block title %} Forms{% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div style="text-align: center;">
+    <h2>My Projects</h2>
+  </div>
+
   {%if current_user.role == "Admin"%}
     <div>
       <a href="{{url_for('main.createproject')}}"><button>CREATE NEW PROJECT</button></a>
     </div>
   {%endif%}
-  <h1>My Projects</h1>
+  
   {% with messages = get_flashed_messages() %}
   {% if messages%}
   <div class="alert alert-danger" role="alert">
@@ -19,22 +24,36 @@
   </div>
   {% endif%}
   {% endwith %}
-  <div class="search">
+
+  <div class="search" style="text-align: center;">
     <form action="/project/search" method="POST">
-      <input type="text" name="search" placeholder="search">
+      <input type="text" name="search" placeholder="search projects">
     </form>
   </div>
+
   {% for project in projects%}
-    <div>
-      <h3>project name: {{project.project_name}}</h3>
-      <p>decsripion: {{project.description}}</p>
-      {% if current_user.role == "Admin"%}
-      <a href="{{ url_for('main.edit_project', idd=project.id) }}">edit</a>
-      <a href="/projects/delete/{{project.id}}">delete</a>
-      {%endif%}
-      <a href="/details/{{project.id}}">details</a>
-      
+    <div class="mdc-layout-grid">
+      <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell--span-12">
+          <div class="mdc-card">
+            <h6 class="card-title">{{project.project_name}}</h6>
+            <p>{{project.description}}</p>
+            <div>
+              {% if current_user.role == "Admin"%}
+              <a href="{{ url_for('main.edit_project', idd=project.id) }}">edit</a> |
+              <a href="/projects/delete/{{project.id}}">delete</a> |
+              {%endif%}
+              <a href="/details/{{project.id}}">details</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   {%endfor%}
-</body>
-</html>
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

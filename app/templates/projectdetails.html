@@ -1,24 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>{{project.project_name}}</h1>
-  <p>{{project.description}}</p>
+{% extends "base-site.html" %}
 
-  <div>
-    <div>
-      <h3>current users in this project</h3>
-      {% for user in project.team %}
-        <p>{{user.name}} - {{user.email}} - {{user.role}}</p>
-      {%endfor%}
-    </div>
-    <div>
-      <a href="/details/tickets/{{project.id}}"><h3> view this project's Tickets </h3></a>
+{% block title %} Forms{% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <section>
+    <a href="/home">Dashboard</a>
+    <- <a href="/projects">projects</a>
+  </section>
+
+
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-card">
+          <div>
+            <h4>{{project.project_name}}</h4>
+            <p>{{project.description}}</p>
+          </div>
+          <div>
+            <h6>current users in this project</h6>
+            {% for user in project.team %}
+            <img src="/static/assets/images/faces/face1.gif" alt="user" class="user" style="width: 3%;">
+            <p>{{user.name}} - {{user.email}} - {{user.role}}</p>
+            {%endfor%}
+          </div>
+          <div>
+            <a href="/details/tickets/{{project.id}}">
+              <h3> view this project's Tickets </h3>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</body>
-</html>
+
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
