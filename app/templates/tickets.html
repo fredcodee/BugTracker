@@ -97,7 +97,13 @@
                         <td>{{t.user_ticket.name}}</td>
                         <td>{{t.status}}</td>
                         <td>{{t.assigned_dev}}</td>
-                        <td>{{t.priority}}</td>
+                        {% if t.priority == 'HIGH'%}
+                        <td style="color: red;">{{t.priority}}</td>
+                        {% elif t.priority =='LOW'%}
+                        <td style="color: green;">{{t.priority}}</td>
+                        {% else %}
+                        <td style="color: orange;">{{t.priority}}</td>
+                        {%endif%}
                       </tr>
 
                     {%endfor%}
@@ -144,7 +150,13 @@
                       <td>{{ticket.user_ticket.name}}</td>
                       <td>{{ticket.status}}</td>
                       <td>{{ticket.assigned_dev}}</td>
-                      <td>{{ticket.priority}}</td>
+                      {% if ticket.priority == 'HIGH'%}
+                        <td style="color: red;">{{ticket.priority}}</td>
+                      {% elif ticket.priority =='LOW'%}
+                        <td style="color: green;">{{ticket.priority}}</td>
+                      {% else %}
+                        <td style="color: orange;">{{ticket.priority}}</td>
+                      {%endif%}
                     </tr>
   
                   {%endfor%}
