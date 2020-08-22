@@ -595,10 +595,4 @@ def delete_ticket(idd):
 
 
 
- 
- 
-
-
-
-
 #written by fredcode 
