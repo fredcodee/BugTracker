@@ -1,13 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>profile</title>
-</head>
-<body>
-  <h1>name: {{get_user.name}}</h1>
-  <h1>email: {{get_user.email}}</h1>
-  <h1>role: {{get_user.role}}</h1>
-</body>
-</html>
+{% extends "base-site.html" %}
+
+{% block title %} {{get_user.name}} {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-card">
+          <h6>Name: {{get_user.name}}</h6>
+          <h6>Email: {{get_user.email}}</h6>
+          <h6>Role: {{get_user.role}}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

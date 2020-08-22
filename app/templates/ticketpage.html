@@ -19,21 +19,20 @@
   {% endif%}
   {% endwith %}
 
-
-  <div class="mdc-layout-grid">
-    <div class="mdc-layout-grid__inner">
-      <div class="mdc-layout-grid__cell--span-12">
-        <div class="mdc-card">
-          {% if current_user.role != "Developer" %}
-          <div style="text-align: center;">
-            <a href="/tickets/edit/{{ticket.id}}">Edit Ticket</a> |
-            <a href="/tickets/delete/{{ticket.id}}">Delete</a>
+  {% if current_user.role != "Developer" %}
+    <div class="mdc-layout-grid">
+      <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell--span-12">
+          <div class="mdc-card">
+            <div style="text-align: center;">
+              <a href="/tickets/edit/{{ticket.id}}">Edit Ticket</a> |
+              <a href="/tickets/delete/{{ticket.id}}">Delete</a>
+            </div>
           </div>
-          {%endif%}
         </div>
       </div>
     </div>
-  </div>
+  {%endif%}
 
   <div class="mdc-layout-grid">
     <div class="mdc-layout-grid__inner">
@@ -65,8 +64,9 @@
                 <label>Upload Image</label>
                 {{form.image(class="form-control")}}
               </div>
-              <input type="submit">
+              <input type="submit" style="margin-top: 1rem;">
             </form>
+            <hr>
           </div>
 
           <div>
@@ -115,8 +115,5 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-
-<script src="/static/assets/vendors/chartjs/Chart.min.js"></script>
-<script src="/static/assets/js/chartjs.js"></script>
 
 {% endblock javascripts %}

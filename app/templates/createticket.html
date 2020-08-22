@@ -1,75 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>creeat ticket</title>
-</head>
-<body>
-  <p> project name: {{project.project_name}}</p>
-  <p>project description: {{project.description}}</p>
-  <h1>CREATE TICKET</h1>
-  {% for message in get_flashed_messages() %}
-  <div class="alert alert-warning">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ message }}
+{% extends "base-site.html" %}
+
+{% block title %} Create Ticket {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-card">
+          <div style="text-align: center;">
+            {% with messages = get_flashed_messages() %}
+            {% if messages%}
+            <div class="alert alert-danger" role="alert">
+              {{ messages[0] }}
+            </div>
+            {%endif%}
+            {% endwith %}
+            <h6>CREATE TICKET</h1>
+            <p> Project Name: {{project.project_name}}</p>
+            <p>Project Description: {{project.description}}</p>
+          </div>
+          <div>
+            <form action="{{url_for('main.createticket_form', idd = project.id)}}" method="POST">
+              <fieldset class="title">
+                <label for="title">Ticket Title</label>
+                <input type="text" id="title" name="title" required>
+              </fieldset>
+          
+              <fieldset class="description">
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description" required>
+              </fieldset>
+          
+              <fieldset class="assigned">
+                <label for="assigned"> Assign User</label>
+                <select name="assigned" id="assigned" required>
+                  {% for user in users%}
+                  <option value="{{user.email}}">{{user.name}}- {{user.role}}</option>
+                  {% endfor %}
+                </select>
+              </fieldset>
+          
+              <fieldset class="priority">
+                <label for="priority">Ticket Priority</label>
+                <select name="priority" id="priority" required>
+                  <option value="NONE">None</option>
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
+                </select>
+              </fieldset>
+          
+              <fieldset class="status">
+                <label for="status">Status</label>
+                <select name="status" id="status" required>
+                  <option value="IN PROGRESS">IN PROGRESS</option>
+                  <option value="OPEN">OPEN</option>
+                  <option value="CLOSED">CLOSED</option>
+                  <option value="RESOLVED">RESOLVED</option>
+                </select>
+              </fieldset>
+          
+              <fieldset class="type">
+                <label for="type"> Ticket Type</label>
+                <select name="type" id="type" required>
+                  <option value="BUG ERRORS">BUG ERRORS</option>
+                  <option value="FEATURE REQUESTS">FEATURE REQUESTS</option>
+                  <option value="ACTION REQUIRED">ACTION REQUIRED</option>
+                  <option value="FILE/DOCUMENT REQUEST">FILE/DOCUMENT REQUEST</option>
+                </select>
+              </fieldset>
+          
+              <div class="submit_buttons" style="text-align: center; margin-top: 1rem;">
+                <input type="submit">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  {% endfor %}
-  <div>
-    <form action="{{url_for('main.createticket_form', idd = project.id)}}" method="POST">
-      <fieldset class="title">
-        <label for="title">Ticket Title</label>
-        <input type="text" id="title" name="title" required>
-      </fieldset>
 
-      <fieldset class="description">
-        <label for="description">Description</label>
-        <input type="text" id="description" name="description" required>
-      </fieldset>
+  
 
-      <fieldset class="assigned">
-        <label for="assigned"> Assign User</label>
-        <select name="assigned" id="assigned" required>
-          {% for user in users%}
-          <option value="{{user.email}}">{{user.name}}- {{user.role}}</option>
-          {% endfor %}
-        </select>
-      </fieldset>
-      
-      <fieldset class="priority">
-        <label for="priority">Ticket Priority</label>
-        <select name="priority" id="priority" required>
-          <option value="NONE">None</option>
-          <option value="LOW">Low</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="HIGH">High</option>
-        </select>
-      </fieldset>
+  
 
-      <fieldset class="status">
-        <label for="status">Status</label>
-        <select name="status" id="status" required>
-          <option value="IN PROGRESS">IN PROGRESS</option>
-          <option value="OPEN">OPEN</option>
-          <option value="CLOSED">CLOSED</option>
-          <option value="RESOLVED">RESOLVED</option>
-        </select>
-      </fieldset>
+  {% endblock content %}
 
-      <fieldset class="type">
-        <label for="type"> Ticket Type</label>
-        <select name="type" id="type" required>
-          <option value="BUG ERRORS">BUG ERRORS</option>
-          <option value="FEATURE REQUESTS">FEATURE REQUESTS</option>
-          <option value="ACTION REQUIRED">ACTION REQUIRED</option>
-          <option value="FILE/DOCUMENT REQUEST">FILE/DOCUMENT REQUEST</option>
-        </select>
-      </fieldset>
-
-       <div class="submit_buttons">
-         <input type="submit">
-       </div>
-    </form>
-  </div>
-</body>
-</html>
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

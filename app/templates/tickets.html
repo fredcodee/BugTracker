@@ -64,12 +64,11 @@
   </div>
   
   
-
+  {% if current_user.role != "Developer"%}
   <div class="mdc-layout-grid">
     <div class="mdc-layout-grid__inner">
       <div class="mdc-layout-grid__cell--span-12">
         <div class="mdc-card">
-          {% if current_user.role != "Developer"%}
           <div>
             <h6 style="text-align: center;">Tickets You Assinged</h6>
             {% if mytickets | length < 1 %}
@@ -112,11 +111,11 @@
               </div>
             {% endif %}
           </div>
-          {%endif%}
         </div>
       </div>
     </div>
   </div>
+  {%endif%}
 
 
 

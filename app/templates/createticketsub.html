@@ -1,19 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Choose project</title>
-</head>
-<body>
-  <p>create ticket</p>
-  <h1>select a project</h1>
-  {% for project in projects %}
-    <div>
-      <a href="{{url_for('main.createticket_form', idd = project.id)}}">{{project.project_name}}</a>
-    </div>
-    <hr>
-  {% endfor%}
+{% extends "base-site.html" %}
 
-</body>
-</html>
+{% block title %} Create Ticket {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-card">
+          <h6 style="text-align: center;">Create Ticket</h6>
+          <h6>select a project</h6>
+          {% if projects | length > 0 %}
+            {% for project in projects %}
+            <div>
+              <a href="{{url_for('main.createticket_form', idd = project.id)}}">{{project.project_name}}</a>
+            </div>
+            <hr>
+            {% endfor%}
+          {% else %}
+            <div>
+              <p>Sorry can't Create new tickets before you create a project</p>
+            </div>
+          {% endif%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

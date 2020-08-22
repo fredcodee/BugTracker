@@ -321,7 +321,7 @@ def project_details(idd):
 @main.route("/details/tickets/<idd>")
 @login_required
 def project_tickets(idd):
-  mytickets = Ticket.query.filter(Ticket.project_ticket.has(id=int(idd)))
+  mytickets = Ticket.query.filter(Ticket.project_ticket.has(id=int(idd))).all()
   return(render_template("tickets.html", tickets=mytickets))
 
 #delete project
@@ -598,16 +598,7 @@ def delete_ticket(idd):
  
  
 
-'''@main.route("/admin_/<idd>")
-@login_required
-def admin_(idd):
-  try:
-    items = Ticket.query.filter(Ticket.project_ticket.has(id=int(idd))).join(Ticket_history, Ticket_history.ticket_history.id == int(idd))
-
-    return(render_template("admin.html", items = items))
-  except:
-    flash("code not working!")
-    return(redirect(url_for("main.mytickets")))'''
 
 
-#written by Wilfred 
+
+#written by fredcode 
