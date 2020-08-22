@@ -1,86 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ticket page</title>
-</head>
-<body>
-  <div>
-    <a href="/home">home</a>
-    {% with messages = get_flashed_messages() %}
-    {% if messages%}
-    <div class="alert alert-danger" role="alert">
-      {{ messages[0] }}
-    </div>
-    {% endif%}
-    {% endwith %}
-    {% if current_user.role != "Developer" %}
-    <div>
-      <a href="/tickets/edit/{{ticket.id}}">Edit Ticket</a>
-    </div>
-    <div>
-      <a href="/tickets/delete/{{ticket.id}}">Delete</a>
-    </div>
-    {%endif%}
-    <h1>{{ticket.title}}</h1>
-    <p>description: {{ticket.description}}</p>
-    <p>submitter: {{ticket.user_ticket.name}}</p>
-    <p>project name: {{ticket.project_ticket.project_name}}</p>
-    <p>assigned to: {{ticket.assigned_dev}}</p>
-    <p>status: {{ticket.status}}</p>
-    <p>priority: {{ticket.priority}}</p>
-    <p>ticket type: {{ticket.ticket_type}}</p>
-    <p>ref number: {{ticket.ref_num}}</p>
-    <p>created on: {{ticket.date}}</p>
-    <hr>
-    <h3>Comments</h3>
-    <div>
-      <form action="/tickets/view/{{ticket.id}}" method="POST" enctype="multipart/form-data">
-        {{form.csrf_token}}
-        <div>
-          <label for="commnet">Comment</label>
-          {{form.comment}}
-        </div>
-        <div>
-          <label>Upload Image</label>
-          {{form.image(class="form-control")}}
-        </div>
-        <input type="submit">
-      </form>
-    </div>
-    <div>
-      {% for comment in comments%}
-        {% if comment.user_comment.name == current_user.name %}
-        <div> 
-          <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}} - {{comment.date}}</small>
-          <p>{{comment.details}}</p>
-          <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt="" style="width: 25%; height: 30%;">
-          <a href="/tickets/comment/delete/{{ticket.id}}/{{comment.id}}"><button>delete</button></a>
-        </div>
-        {% else %}
-        <div>
-          <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}} - {{comment.date}}</small>
-          <p>{{comment.details}}</p>
-          <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt="" style="width: 25%; height: 30%;">
-        </div>
-        {%endif%}
-      {% endfor %}
-    </div>
-    <hr>
-    <div>
-      <h3>Ticket history</h3>
-      <div>
-        {% for h in history%}
-          <div>
-            <small>{{h.details}}</small>
-            <small> on {{h.date}}</small>
+{% extends "base-site.html" %}
+
+{% block title %} Ticket {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+  <section>
+    <a href="/home">Dashboard</a>
+    <- <a href="/mytickets">Tickets</a>
+  </section>
+
+  {% with messages = get_flashed_messages() %}
+  {% if messages%}
+  <div class="alert alert-danger" role="alert">
+    {{ messages[0] }}
+  </div>
+  {% endif%}
+  {% endwith %}
+
+
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell--span-12">
+        <div class="mdc-card">
+          {% if current_user.role != "Developer" %}
+          <div style="text-align: center;">
+            <a href="/tickets/edit/{{ticket.id}}">Edit Ticket</a> |
+            <a href="/tickets/delete/{{ticket.id}}">Delete</a>
           </div>
-        {% endfor %}
+          {%endif%}
+        </div>
       </div>
     </div>
-
-    <p></p>
   </div>
-</body>
-</html>
+
+  <div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+      <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6-desktop">
+        <div class="mdc-card">
+          <h6 class="card-title">{{ticket.title}}</h6>
+          <p>Description: {{ticket.description}}</p>
+          <p>Submitter: {{ticket.user_ticket.name}}</p>
+          <p>Project name: {{ticket.project_ticket.project_name}}</p>
+          <p>Assigned to: {{ticket.assigned_dev}}</p>
+          <p>Status: {{ticket.status}}</p>
+          <p>Priority: {{ticket.priority}}</p>
+          <p>Ticket type: {{ticket.ticket_type}}</p>
+          <p>Ref number: {{ticket.ref_num}}</p>
+          <p>Created on: {{ticket.date.strftime("%d %m %Y")}}</p>  
+        </div>
+      </div>
+      <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6-desktop">
+        <div class="mdc-card" style="text-align: center;">
+          <h6 class="card-title">Comments</h6>
+          <div>
+            <form action="/tickets/view/{{ticket.id}}" method="POST" enctype="multipart/form-data">
+              {{form.csrf_token}}
+              <div>
+                <label for="commnet">Comment</label>
+                {{form.comment}}
+              </div>
+              <div>
+                <label>Upload Image</label>
+                {{form.image(class="form-control")}}
+              </div>
+              <input type="submit">
+            </form>
+          </div>
+
+          <div>
+            {% for comment in comments%}
+            {% if comment.user_comment.name == current_user.name %}
+            <div>
+              <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}} - {{comment.date.strftime("%d %m %Y")}}</small>
+              <p>{{comment.details}}</p>
+              <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt=""
+                style="width: 25%; height: 30%;">
+              <a href="/tickets/comment/delete/{{ticket.id}}/{{comment.id}}"><button>delete</button></a>
+            </div>
+            {% else %}
+            <div>
+              <small style="color: gray;">{{comment.user_comment.name}} - {{comment.user_comment.role}} - {{comment.date.strftime("%d %m %Y")}}</small>
+              <p>{{comment.details}}</p>
+              <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt=""
+                style="width: 25%; height: 30%;">
+            </div>
+            {%endif%}
+            <hr>
+            {% endfor %}
+          </div>
+          
+        </div>
+      </div>
+      <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6-desktop">
+        <div class="mdc-card">
+          <h6 class="card-title">Ticket history</h6>
+          <div>
+            {% for h in history%}
+            <div>
+              <small>{{h.details}}</small>
+              <small> on {{h.date.strftime("%d %m %Y")}}</small>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script src="/static/assets/vendors/chartjs/Chart.min.js"></script>
+<script src="/static/assets/js/chartjs.js"></script>
+
+{% endblock javascripts %}
