@@ -5,7 +5,7 @@
 and developers effectively
 
 ## What problem does Bugtrackerr solve ?
-- To keep track of reported software bugs in software development projects. It may be regarded as a type of issue tracking system
+- To keep track of reported software bugs and feature requests in software development projects. It may be regarded as a type of issue tracking system
 
 ### Tools:
 - Flask
@@ -40,8 +40,8 @@ and developers effectively
 
 ### Nb: **Before you run go to init.py file in the app folder and change the DATABASE_URI to yours **
 ###                                                          web app Preview
-![alt text]("https://github.com/fredcodee/BugTracker/blob/master/appview/homepage.png")
-![alt text]("https://github.com/fredcodee/BugTracker/blob/master/appview/dashboard.png")
-![alt text]("https://github.com/fredcodee/BugTracker/blob/master/appview/adminview.png")
-![alt text]("https://github.com/fredcodee/BugTracker/blob/master/appview/ticketspage.png")
+![alt text](https://github.com/fredcodee/BugTracker/blob/master/appview/homepage.png)
+![alt text](https://github.com/fredcodee/BugTracker/blob/master/appview/dashboard.png)
+![alt text](https://github.com/fredcodee/BugTracker/blob/master/appview/adminview.png)
+![alt text](https://github.com/fredcodee/BugTracker/blob/master/appview/ticketspage.png)
 
