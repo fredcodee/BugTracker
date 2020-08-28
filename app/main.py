@@ -4,14 +4,14 @@ from app.forms import Comments
 from app import db, photos
 from flask_login import login_required , current_user
 import random
-from sqlalchemy import or_ , and_
+from sqlalchemy import or_ , and_, desc
 
 main = Blueprint('main', __name__)
 
 
 @main.route("/")
 def index():
-  return(render_template("index.html"))
+  return render_template("index.html")
 
 @main.route("/home")
 @login_required
@@ -19,30 +19,30 @@ def home():
 
   #dashboard properties
   get_notifications = Notification.query.filter_by(assigned_dev=current_user.name).all()
-  if current_user.role == 'Admin':
+  if current_user.role != 'Developer':
     get_tickets = Ticket.query.all()
     get_projects = Project.query.all()
-    ot=len(Ticket.query.filter_by(status = 'OPEN').all())
-    ct=len(Ticket.query.filter_by(status = 'CLOSED').all())
-    fr = len(Ticket.query.filter_by(ticket_type='FEATURE REQUESTS').all())
-    ar = len(Ticket.query.filter_by(ticket_type='ACTION REQUIRED').all())
+    open_tickets=len(Ticket.query.filter_by(status = 'OPEN').all())
+    close_tickets =len(Ticket.query.filter_by(status = 'CLOSED').all())
+    feature_request = len(Ticket.query.filter_by(ticket_type='FEATURE REQUESTS').all())
+    action_required = len(Ticket.query.filter_by(ticket_type='ACTION REQUIRED').all())
     bugs = len(Ticket.query.filter_by(ticket_type='BUG ERRORS').all())
-    fdr = len(Ticket.query.filter_by(ticket_type='FILE/DOCUMENT REQUEST').all())
+    file_document = len(Ticket.query.filter_by(ticket_type='FILE/DOCUMENT REQUEST').all())
   else:
     get_tickets = Ticket.query.filter_by(assigned_dev=current_user.email).all()
     get_projects = Project.query.filter(Project.team.any(id=current_user.id)).all()
-    ot= len(Ticket.query.filter(and_(Ticket.assigned_dev == current_user.email, Ticket.status == 'OPEN' )).all())
-    ct=len(Ticket.query.filter(and_(Ticket.assigned_dev == current_user.email, Ticket.status == 'CLOSED' )).all())
-    fr = len(Ticket.query.filter(
+    open_tickets = len(Ticket.query.filter(and_(Ticket.assigned_dev == current_user.email, Ticket.status == 'OPEN' )).all())
+    close_tickets =len(Ticket.query.filter(and_(Ticket.assigned_dev == current_user.email, Ticket.status == 'CLOSED' )).all())
+    feature_request = len(Ticket.query.filter(
         and_(Ticket.assigned_dev == current_user.email, Ticket.ticket_type=='FEATURE REQUESTS')).all())
-    ar = len(Ticket.query.filter(
+    action_required = len(Ticket.query.filter(
         and_(Ticket.assigned_dev==current_user.email, Ticket.ticket_type=='ACTION REQUEST')).all())
     bugs = len(Ticket.query.filter(
         and_(Ticket.assigned_dev==current_user.email, Ticket.ticket_type=='BUG ERRORS')).all())
-    fdr = len(Ticket.query.filter(
+    file_document = len(Ticket.query.filter(
         and_(Ticket.assigned_dev==current_user.email, Ticket.ticket_type=='FILE/DOCUMENT REQUEST')).all())
 
-  return(render_template("dashboard.html", notifications =get_notifications, get_tickets=len(get_tickets), get_projects = len(get_projects), ot = ot, ct = ct, fr =fr, ar=ar,bugs = bugs,fdr =fdr))
+  return render_template("dashboard.html", notifications=get_notifications, get_tickets=len(get_tickets), get_projects=len(get_projects), ot=open_tickets, ct=close_tickets, fr=feature_request, ar=action_required, bugs=bugs, fdr=file_document)
 
 
 #NOTIFICATIONS
@@ -59,7 +59,7 @@ def add_notification(details,a_dev,link):
 def profile(user):
   if current_user.name == user:
     get_user = User.query.filter_by(name=user).first()
-    return(render_template("profile.html", get_user=get_user))
+    return render_template("profile.html", get_user=get_user)
 
 #show all users for manage role assignment(Admin)
 @main.route("/managerole", methods=["GET","POST"])
@@ -69,7 +69,7 @@ def mra():
     items_num = 10
     users = User.query.paginate(1, items_num, False).items
     pn=len(users)
-    return(render_template("mra.html", users=users, pn = pn))
+    return render_template("mra.html", users=users, pn = pn)
   else:
     abort(404)
 
@@ -82,9 +82,9 @@ def pagenum():
     if num:
       items_num = int(num)
       users = User.query.paginate(1, items_num, False).items
-      return(render_template("mra.html", users=users))
+      return render_template("mra.html", users=users)
     else:
-      return(redirect(url_for("main.mra")))
+      return redirect(url_for("main.mra"))
   else:
     abort(404)
 
@@ -100,13 +100,13 @@ def searchuser():
       get_user = User.query.filter(
           or_(User.name == search, User.email == init_search, User.role == search)).all()
       if get_user:
-        return(render_template("mra.html", users=get_user))
+        return render_template("mra.html", users=get_user)
       else:
         flash("user not found")
-        return(redirect(url_for("main.mra")))
+        return redirect(url_for("main.mra"))
     else:
       flash("please recheck and type the correct details needed")
-      return(redirect(url_for("main.mra")))
+      return redirect(url_for("main.mra"))
   else:
     abort(404)
 
@@ -122,10 +122,10 @@ def assign(idd):
       get_user.role = role
       db.session.commit()
       flash("New role assigned")
-      return(redirect(url_for("main.mra")))
+      return redirect(url_for("main.mra"))
     else:
       flash("invalid / no role was assigned")
-      return(redirect(url_for("main.mra")))
+      return redirect(url_for("main.mra"))
   else:
     abort(404)
 
@@ -139,7 +139,7 @@ def delete_user(idd):
       db.session.delete(get_user)
       db.session.commit()
       flash("user deleted")
-      return(redirect(url_for("main.mra")))
+      return redirect(url_for("main.mra"))
   else:
     abort(404)
 
@@ -150,7 +150,7 @@ def delete_user(idd):
 def manageprojects():
   if current_user.role == "Admin" or current_user.role == "Project Manager":
     projects = Project.query.all()
-    return(render_template("mpr.html", projects=projects))
+    return render_template("mpr.html", projects=projects) 
   else:
     abort(404)
 
@@ -161,7 +161,7 @@ def AddToProject(idd):
   if current_user.role == "Admin" or current_user.role == "Project Manager":
     project = Project.query.get(int(idd))
     assigned_users = project.team
-    return(render_template("assign.html", project = project, assigned = assigned_users))
+    return render_template("assign.html", project = project, assigned = assigned_users)
   else:
     abort(404)
 
@@ -177,13 +177,13 @@ def searchuser2(idd):
     get_user = User.query.filter(
         or_(User.name == search,User.email == init_search,User.role == search)).all()
     if get_user:
-      return(render_template("assign2.html", users=get_user, project = project))
+      return render_template("assign2.html", users=get_user, project = project) 
     else:
       flash("user not found")
-      return(redirect(url_for("main.AddToProject", idd=idd)))
+      return redirect(url_for("main.AddToProject", idd=idd)) 
   else:
     flash("please recheck and type the correct details needed")
-    return(redirect(url_for("main.AddToProject", idd = idd)))
+    return redirect(url_for("main.AddToProject", idd = idd)) 
 
 #add user to a project
 @main.route("/adduser/<idd>", methods=["POST"])
@@ -205,7 +205,7 @@ def adduser(idd):
       add_notification(details, a_dev, link)
 
   flash("changes saved")
-  return(redirect(url_for("main.AddToProject", idd = idd)))
+  return redirect(url_for("main.AddToProject", idd = idd)) 
 
 #remove users
 @main.route("/remove/<idd>" , methods= ["POST", "GET"])
@@ -224,7 +224,7 @@ def remove(idd):
         link = "/home"
         add_notification(details, a_dev, link)
         flash("changes saved")
-        return(redirect(url_for("main.remove", idd = idd)))
+        return redirect(url_for("main.remove", idd = idd)) 
 
     project = Project.query.get(int(idd))
     assigned_users = project.team
@@ -248,9 +248,9 @@ def createproject():
 
       get_project = Project.query.filter_by(project_name=project_name).first()
       flash('project created')
-      return(redirect(url_for('main.AddToProject', idd=get_project.id)))
+      return redirect(url_for('main.AddToProject', idd=get_project.id)) 
 
-    return(render_template('createproject.html'))
+    return render_template('createproject.html') 
   else:
     abort(404)
 
@@ -262,7 +262,7 @@ def projects():
     projects = Project.query.all()
   elif current_user.role == "Project Manager" or current_user.role == "Developer":
     projects=Project.query.filter(Project.team.any(id = current_user.id)).all()
-  return(render_template("projects.html", projects = projects))
+  return render_template("projects.html", projects = projects) 
 
 #search project
 @main.route("/project/search", methods=["GET", "POST"])
@@ -274,7 +274,7 @@ def p_search():
 
   if results:
     if current_user.role == "Admin":
-      return(render_template("projects.html", projects = results))
+      return render_template("projects.html", projects = results) 
     elif current_user.role != "Admin":
       results=[]
       for user_project in user_projects:
@@ -282,11 +282,11 @@ def p_search():
           results.append(user_project)
       if len(results) == 0:
         flash("Project not found")
-        return(redirect(url_for("main.projects")))
-      return(render_template("projects.html", projects=results))
+        return redirect(url_for("main.projects")) 
+      return render_template("projects.html", projects=results) 
   else:
     flash("Project not found")
-    return(redirect(url_for("main.projects")))
+    return redirect(url_for("main.projects")) 
 
 #edit project (Admin)
 @main.route("/editproject/<idd>", methods=['POST', 'GET'])
@@ -303,9 +303,9 @@ def edit_project(idd):
       project.description  = project_description
       db.session.commit()
       flash('changes saved')
-      return(redirect(url_for('main.projects')))
+      return redirect(url_for('main.projects')) 
 
-    return(render_template('editproject.html', project =project))
+    return render_template('editproject.html', project =project) 
   else:
     abort(404)
 
@@ -315,14 +315,14 @@ def edit_project(idd):
 def project_details(idd):
   project = Project.query.get(int(idd))
 
-  return(render_template("projectdetails.html", project = project))
+  return render_template("projectdetails.html", project = project) 
 
 #view project tickets
 @main.route("/details/tickets/<idd>")
 @login_required
 def project_tickets(idd):
   mytickets = Ticket.query.filter(Ticket.project_ticket.has(id=int(idd))).all()
-  return(render_template("tickets.html", tickets=mytickets))
+  return render_template("tickets.html", tickets=mytickets) 
 
 #delete project
 @main.route("/projects/delete/<idd>")
@@ -332,7 +332,7 @@ def delete_project(idd):
   db.session.delete(get_project)
   db.session.commit()
   flash("project deleted")
-  return(redirect(url_for("main.projects")))
+  return redirect(url_for("main.projects")) 
 
 
 #TICKETS
@@ -351,13 +351,13 @@ def mytickets():
   #admin and pm sees all tickets
   if current_user.role == "Admin" or current_user.role == "Project Manager":
     get_mytickets = Ticket.query.filter(Ticket.user_ticket.has(id=current_user.id)).all()
-    get_myassigned_tickets = Ticket.query.all()
-    return(render_template("tickets.html",mytickets=get_mytickets, tickets=get_myassigned_tickets))
+    get_myassigned_tickets = Ticket.query.filter().order_by(desc(Ticket.id)).all()
+    return render_template("tickets.html",mytickets=get_mytickets, tickets=get_myassigned_tickets) 
   
   elif current_user.role == "Developer":
     # restricted to only theirs
-    mytickets = Ticket.query.filter_by(assigned_dev=current_user.email).all()
-    return(render_template("tickets.html", tickets=mytickets))
+    mytickets = Ticket.query.filter_by(assigned_dev=current_user.email).order_by(desc(Ticket.id)).all()
+    return render_template("tickets.html", tickets=mytickets) 
   else:
     abort(404)
 
@@ -367,7 +367,7 @@ def mytickets():
 def createticket():
   if current_user.role == "Admin" or current_user.role == "Project Manager":
     projects = Project.query.all()
-    return(render_template("createticketsub.html", projects = projects))
+    return render_template("createticketsub.html", projects = projects) 
   else:
     abort(404)
 
@@ -416,10 +416,10 @@ def createticket_form(idd):
         add_notification(details, a_dev, link)
 
         flash("Ticket Created")
-        return(redirect(url_for("main.mytickets")))
+        return redirect(url_for("main.mytickets")) 
       else:
         flash("Assigned developer not found")
-        return(redirect(url_for("main.createticket_form", idd = idd)))
+        return redirect(url_for("main.createticket_form", idd = idd)) 
 
     users =project.team
     return(render_template("createticket.html", project= project, users=users))
@@ -439,22 +439,22 @@ def tickets_search():
         search = Ticket.query.filter_by(ref_num = int(search)).all()
       elif current_user.role == "Developer" or current_user.role =="Project Manager":
         search = Ticket.query.filter(and_(Ticket.ref_num == int(search), Ticket.assigned_dev == current_user.email)).all()
-      return(render_template("tickets.html", tickets=search))
+      return render_template("tickets.html", tickets=search) 
     except:
       if current_user.role == "Admin":
         search = Ticket.query.filter_by(title=search).all()
       elif current_user.role == "Developer" or current_user.role == "Project Manager":
         search = Ticket.query.filter(and_(Ticket.title == search, Ticket.assigned_dev == current_user.email)).all()
-      return(render_template("tickets.html", tickets=search))
+      return render_template("tickets.html", tickets=search) 
   elif status:
     if current_user.role != "Admin":
       search = Ticket.query.filter(and_(Ticket.status == status, Ticket.assigned_dev == current_user.email)).all()
     else:
       search = Ticket.query.filter_by(status=status).all()
-    return(render_template("tickets.html", tickets=search))
+    return render_template("tickets.html", tickets=search) 
   else:
     flash("ticket not found")
-    return(redirect(url_for("main.mytickets")))
+    return redirect(url_for("main.mytickets")) 
 
 
 @main.route("/tickets/priority", methods=["POST", "GET"])
@@ -466,7 +466,7 @@ def tickets_priority():
     search = Ticket.query.filter(and_(Ticket.priority == priority, Ticket.assigned_dev == current_user.email)).all()
   else:
     search = Ticket.query.filter_by(priority=priority).all()
-  return(render_template("tickets.html", tickets=search))
+  return render_template("tickets.html", tickets=search) 
 
 #view ticket page
 @main.route("/tickets/view/<idd>", methods =["POST","GET"])
@@ -504,10 +504,10 @@ def view_ticket(idd):
         add_notification(details, a_dev, link)
   
       flash("comment added")
-      return(redirect(url_for("main.view_ticket", idd=idd)))
+      return redirect(url_for("main.view_ticket", idd=idd)) 
     except:
       flash("empty field")
-      return(redirect(url_for("main.view_ticket", idd=idd)))
+      return redirect(url_for("main.view_ticket", idd=idd)) 
     
 
   comments = Comment.query.filter(Comment.ticket_comments.has(id=int(idd)))
@@ -529,7 +529,7 @@ def delete_comment(idd, c_id):
   add_log(current_user.name,get_ticket,log)
 
   flash("comment deleted")
-  return(redirect(url_for("main.view_ticket", idd = idd)))
+  return redirect(url_for("main.view_ticket", idd = idd)) 
 
 #edit ticket
 @main.route("/tickets/edit/<idd>", methods=["POST", "GET"])
@@ -573,7 +573,7 @@ def edit_ticket(idd):
       add_notification(details, a_dev, link)
       
       flash('changes saved')
-      return(redirect(url_for("main.view_ticket", idd=idd)))
+      return redirect(url_for("main.view_ticket", idd=idd)) 
 
     users = User.query.filter( or_(User.role == "Developer", User.role == "Project Manager")).all()
     return(render_template("editticket.html", ticket=get_ticket, users=users))
@@ -589,10 +589,13 @@ def delete_ticket(idd):
     db.session.delete(get_ticket)
     db.session.commit()
     flash('Ticket deleted')
-    return(redirect(url_for("main.mytickets")))
+    return redirect(url_for("main.mytickets")) 
   flash('you dont have access to this request')
-  return(redirect(url_for("main.mytickets")))
+  return redirect(url_for("main.mytickets")) 
 
-
+#error handling
+@main.errorhandler(404)
+def error404(error):
+  return(render_template('page-404.html'), 404)
 
 #written by fredcode 

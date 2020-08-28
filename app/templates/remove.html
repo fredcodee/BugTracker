@@ -33,7 +33,7 @@
                 {% for assigned_user in assigned%}
                 {{assigned_user.name}} {{assigned_user.role}}<input type="checkbox" value="{{assigned_user.id}}" name="user"> <br>
                 {% endfor%}
-                <input type="submit">
+                <button type="button" class="btn btn-primary"> Submit </button>
               </form>
             
             </div>

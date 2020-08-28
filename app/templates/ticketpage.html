@@ -43,7 +43,7 @@
           <p>Submitter: {{ticket.user_ticket.name}}</p>
           <p>Project name: {{ticket.project_ticket.project_name}}</p>
           <p>Assigned to: {{ticket.assigned_dev}}</p>
-          <p>Status: {{ticket.status}}</p>
+          <p>Status: {{ticket.status}}</p> <button type="button" class="btn btn-warning">Change Status</button>
           <p>Priority: {{ticket.priority}}</p>
           <p>Ticket type: {{ticket.ticket_type}}</p>
           <p>Ref number: {{ticket.ref_num}}</p>
@@ -64,7 +64,8 @@
                 <label>Upload Image</label>
                 {{form.image(class="form-control")}}
               </div>
-              <input type="submit" style="margin-top: 1rem;">
+             
+              <button type="button" class="btn btn-primary" style="margin-top: 1rem;">Submit</button>
             </form>
             <hr>
           </div>
@@ -77,7 +78,7 @@
               <p>{{comment.details}}</p>
               <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt=""
                 style="width: 25%; height: 30%;">
-              <a href="/tickets/comment/delete/{{ticket.id}}/{{comment.id}}"><button>delete</button></a>
+              <a href="/tickets/comment/delete/{{ticket.id}}/{{comment.id}}"><button type="button" class="btn btn-danger">delete</button></a>
             </div>
             {% else %}
             <div>
