@@ -13,7 +13,7 @@
 
   {%if current_user.role == "Admin"%}
     <div>
-      <a href="{{url_for('main.createproject')}}"><button>CREATE NEW PROJECT</button></a>
+      <a href="{{url_for('main.createproject')}}"><button type="button" class="btn btn-primary">CREATE NEW PROJECT</button></a>
     </div>
   {%endif%}
   

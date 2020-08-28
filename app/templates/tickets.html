@@ -21,7 +21,7 @@
         <div class="mdc-card">
           <div style="text-align: center;">
             {% if current_user.role != "Developer" %}
-              <a href="{{url_for('main.createticket')}}"><button>CREATE NEW TICKET</button></a>
+              <a href="{{url_for('main.createticket')}}"><button type="button" class="btn btn-primary">CREATE NEW TICKET</button></a>
             {%endif%}
           </div>
           <div class="filter" style="padding-top: 1.1rem;">
