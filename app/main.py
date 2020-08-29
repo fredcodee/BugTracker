@@ -531,6 +531,34 @@ def delete_comment(idd, c_id):
   flash("comment deleted")
   return redirect(url_for("main.view_ticket", idd = idd)) 
 
+#request ticket status change
+@main.route("/tickets/request/<idd>", methods = ["POST", "GET"])
+@login_required
+def request_change(idd):
+  get_ticket = Ticket.query.get(int(idd))
+  if request.method == "POST":
+    get_status = request.form["status"]
+    if get_status != "N":
+      get_ticket.status = get_status
+
+      #add log to Ticket history
+      log = "Change Ticket Status"
+      add_log(current_user.name, get_ticket, log)
+      db.session.commit()
+
+      #add to notification
+      details = "%s Change Ticket Status " % (current_user.name)
+      a_de = User.query.filter_by(email=get_ticket.assigned_dev).first()
+      a_dev = a_de.name 
+      link = "/tickets/view/%s" % (idd)
+      add_notification(details, a_dev, link)
+
+      flash("Changes saved")
+      return redirect(url_for("main.view_ticket", idd=idd))
+    else:
+      flash("No changes detected")
+      return redirect(url_for("main.view_ticket", idd=idd))
+
 #edit ticket
 @main.route("/tickets/edit/<idd>", methods=["POST", "GET"])
 @login_required

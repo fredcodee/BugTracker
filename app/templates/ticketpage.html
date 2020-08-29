@@ -43,7 +43,7 @@
           <p>Submitter: {{ticket.user_ticket.name}}</p>
           <p>Project name: {{ticket.project_ticket.project_name}}</p>
           <p>Assigned to: {{ticket.assigned_dev}}</p>
-          <p>Status: {{ticket.status}}</p> <button type="button" class="btn btn-warning">Change Status</button>
+          <p>Status: {{ticket.status}}</p> <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModalCenter"> Change Status</button>
           <p>Priority: {{ticket.priority}}</p>
           <p>Ticket type: {{ticket.ticket_type}}</p>
           <p>Ref number: {{ticket.ref_num}}</p>
@@ -65,7 +65,7 @@
                 {{form.image(class="form-control")}}
               </div>
              
-              <button type="button" class="btn btn-primary" style="margin-top: 1rem;">Submit</button>
+              <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Submit</button>
             </form>
             <hr>
           </div>
@@ -78,7 +78,7 @@
               <p>{{comment.details}}</p>
               <img src="{{url_for('static', filename='ticketfiles/%s' % comment['image'])}}" alt=""
                 style="width: 25%; height: 30%;">
-              <a href="/tickets/comment/delete/{{ticket.id}}/{{comment.id}}"><button type="button" class="btn btn-danger">delete</button></a>
+              <a href="/tickets/comment/delete/{{ticket.id}}/{{comment.id}}"><button type="submit" class="btn btn-danger">delete</button></a>
             </div>
             {% else %}
             <div>
@@ -110,11 +110,72 @@
     </div>
   </div>
 
+  <!-- ticket status pop up-->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Change Ticket Status</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/tickets/request/{{ticket.id}}" method="POST">
+            <fieldset class="status">
+              <label for="status">Status</label>
+              <select name="status" id="status">
+                <option value="N">{{ticket.status}}</option>
+                <option value="IN PROGRESS">IN PROGRESS</option>
+                <option value="OPEN">OPEN</option>
+                <option value="CLOSED">CLOSED</option>
+                <option value="RESOLVED">RESOLVED</option>
+              </select>
+            </fieldset>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" id="form-button">Save changes</button>
+            </div>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>>
+
 
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+  <script>
+    $(document).ready(function(){
+      $('form').on('submit', function (e) {
+        var formData = $(form).serialize();
+        $.ajax({
+          data: formData,
+          type: form.attr('method'),
+          url: form.attr('action')
+        })
+        .done(function (data) {
+          if (data.error) {
+            console.log("data");
+          }
+          else {
+            console.log("data");
+          }
+        });
+        event.preventDefault();
+      });
+    });
+  </script>
+    
 {% endblock javascripts %}
