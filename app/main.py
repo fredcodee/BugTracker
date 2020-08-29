@@ -391,7 +391,7 @@ def createticket_form(idd):
 
       #create ref num
       ref_n = []
-      for i in range(6):
+      for _ in range(6):
         n = random.randint(0, 9)
         ref_n.append(str(n))
       ref_num = "".join(ref_n)
