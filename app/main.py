@@ -18,7 +18,9 @@ def index():
 def home():
 
   #dashboard properties
-  get_notifications = Notification.query.filter_by(assigned_dev=current_user.name).all()
+  get_notifications = Notification.query.filter_by(
+      assigned_dev=current_user.name).order_by(desc(Notification.id)).all()
+
   if current_user.role != 'Developer':
     get_tickets = Ticket.query.all()
     get_projects = Project.query.all()
@@ -547,11 +549,17 @@ def request_change(idd):
       db.session.commit()
 
       #add to notification
-      details = "%s Change Ticket Status " % (current_user.name)
-      a_de = User.query.filter_by(email=get_ticket.assigned_dev).first()
-      a_dev = a_de.name 
-      link = "/tickets/view/%s" % (idd)
-      add_notification(details, a_dev, link)
+      if current_user.role != "Developer":
+        details = "%s Changed Ticket Status " % (current_user.name)
+        a_de = User.query.filter_by(email=get_ticket.assigned_dev).first()
+        a_dev = a_de.name
+        link = "/tickets/view/%s"%(idd)
+        add_notification(details, a_dev, link)
+      else:
+        details = "%s Changed Ticket Status " % (current_user.name)
+        a_dev = get_ticket.user_ticket.name
+        link = "/tickets/view/%s" % (idd)
+        add_notification(details, a_dev, link)
 
       flash("Changes saved")
       return redirect(url_for("main.view_ticket", idd=idd))
