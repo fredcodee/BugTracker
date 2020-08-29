@@ -41,10 +41,12 @@
               <p>{{project.description}}</p>
               <div>
                 {% if current_user.role == "Admin"%}
-                <a href="{{ url_for('main.edit_project', idd=project.id) }}">edit</a> |
-                <a href="/projects/delete/{{project.id}}">delete</a> |
+                <a href="{{ url_for('main.edit_project', idd=project.id) }}"> 
+                <button type="button" class="btn btn-warning">Edit</button></a>
+                <a href="/projects/delete/{{project.id}}"><button type="button" class="btn btn-danger">Delete</button></a>
                 {%endif%}
-                <a href="/details/{{project.id}}">details</a>
+                <a href="/details/{{project.id}}">
+                <button type="button" class="btn btn-primary">Details</button></a>
               </div>
             </div>
           </div>
@@ -62,10 +64,13 @@
         </div>
       </div>
   {% endif %}
+  
 
 
 
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+ 
+{% endblock javascripts %}
